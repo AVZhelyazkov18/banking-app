@@ -1,12 +1,14 @@
 package bg.nbu.banking_app.entity;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Set;
 
+@Entity
 public class PaymentPlan extends BaseEntity {
     @Column(name = "contribution_amount")
     private BigDecimal contributionAmount;

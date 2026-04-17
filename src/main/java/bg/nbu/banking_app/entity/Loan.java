@@ -1,12 +1,14 @@
 package bg.nbu.banking_app.entity;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
 import java.math.BigDecimal;
 import java.util.Set;
 
+@Entity
 public class Loan extends BaseEntity {
     @Column(name = "amount_disburesd")
     private BigDecimal amountDisbursed;
