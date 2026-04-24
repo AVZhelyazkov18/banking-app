@@ -1,6 +1,6 @@
-package bg.nbu.banking_app.repository;
+package bg.nbu.banking_app.data.repository;
 
-import bg.nbu.banking_app.entity.Person;
+import bg.nbu.banking_app.data.entity.Person;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

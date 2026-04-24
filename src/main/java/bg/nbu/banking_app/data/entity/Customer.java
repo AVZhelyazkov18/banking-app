@@ -1,4 +1,4 @@
-package bg.nbu.banking_app.entity;
+package bg.nbu.banking_app.data.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
