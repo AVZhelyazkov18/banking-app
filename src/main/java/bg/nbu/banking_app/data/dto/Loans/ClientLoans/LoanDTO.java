@@ -12,9 +12,9 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class CreateLoanDTO {
+public class LoanDTO {
     private BigDecimal amountDisbursed;
     private int paymentTerm;
-    private long loanTypeId;
-    private long customerId;
+    private LoanType loanType;
+    private Customer customer;
 }

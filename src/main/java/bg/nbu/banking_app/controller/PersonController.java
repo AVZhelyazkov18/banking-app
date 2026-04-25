@@ -1,7 +1,7 @@
 package bg.nbu.banking_app.controller;
 
-import bg.nbu.banking_app.data.dto.PersonDTO;
-import bg.nbu.banking_app.data.dto.UpdatePersonDTO;
+import bg.nbu.banking_app.data.dto.Customers.NaturalPerson.PersonDTO;
+import bg.nbu.banking_app.data.dto.Customers.NaturalPerson.UpdatePersonDTO;
 import bg.nbu.banking_app.service.PersonService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

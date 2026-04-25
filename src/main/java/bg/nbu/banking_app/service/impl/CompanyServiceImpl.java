@@ -1,7 +1,7 @@
 package bg.nbu.banking_app.service.impl;
 
-import bg.nbu.banking_app.data.dto.CompanyDTO;
-import bg.nbu.banking_app.data.dto.UpdateCompanyDTO;
+import bg.nbu.banking_app.data.dto.Customers.Company.CompanyDTO;
+import bg.nbu.banking_app.data.dto.Customers.Company.UpdateCompanyDTO;
 import bg.nbu.banking_app.data.entity.Company;
 import bg.nbu.banking_app.data.repository.CompanyRepository;
 import bg.nbu.banking_app.service.CompanyService;

@@ -2,12 +2,17 @@ package bg.nbu.banking_app.data.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Set;
 
+@Getter
+@Setter
 @Entity
 public class PaymentPlan extends BaseEntity {
     @Column(name = "contribution_amount")
@@ -22,6 +27,6 @@ public class PaymentPlan extends BaseEntity {
     @Column(name = "date")
     private LocalDate date;
 
-    @ManyToOne
-    private Set<Loan> loans;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Loan loan;
 }

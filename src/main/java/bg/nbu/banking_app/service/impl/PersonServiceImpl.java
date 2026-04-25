@@ -1,7 +1,7 @@
 package bg.nbu.banking_app.service.impl;
 
-import bg.nbu.banking_app.data.dto.PersonDTO;
-import bg.nbu.banking_app.data.dto.UpdatePersonDTO;
+import bg.nbu.banking_app.data.dto.Customers.NaturalPerson.PersonDTO;
+import bg.nbu.banking_app.data.dto.Customers.NaturalPerson.UpdatePersonDTO;
 import bg.nbu.banking_app.data.entity.Person;
 import bg.nbu.banking_app.data.repository.PersonRepository;
 import bg.nbu.banking_app.service.PersonService;

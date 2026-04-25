@@ -2,8 +2,12 @@ package bg.nbu.banking_app.data.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
 @Entity
+@Setter
 public class LoanType extends BaseEntity {
     @Column(name = "credit_name")
     private String creditName;
