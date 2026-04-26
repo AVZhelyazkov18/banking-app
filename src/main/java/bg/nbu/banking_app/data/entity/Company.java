@@ -7,13 +7,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Table(name = "company")
-public class Company {
-
-    @OneToOne
-    @JoinColumn(name = "customer_id")
-    @MapsId
-    private Customer customer;
-
+public class Company extends Customer {
     @Setter
     @Column(name = "company_name")
     private String companyName;

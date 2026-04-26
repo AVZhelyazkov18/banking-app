@@ -1,4 +1,4 @@
-package bg.nbu.banking_app.data.dto;
+package bg.nbu.banking_app.data.dto.Customers.NaturalPerson;
 
 import lombok.*;
 

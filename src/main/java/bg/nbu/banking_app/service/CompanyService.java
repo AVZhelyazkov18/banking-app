@@ -1,8 +1,8 @@
 package bg.nbu.banking_app.service;
 
 
-import bg.nbu.banking_app.data.dto.CompanyDTO;
-import bg.nbu.banking_app.data.dto.UpdateCompanyDTO;
+import bg.nbu.banking_app.data.dto.Customers.Company.CompanyDTO;
+import bg.nbu.banking_app.data.dto.Customers.Company.UpdateCompanyDTO;
 
 import java.util.List;
 

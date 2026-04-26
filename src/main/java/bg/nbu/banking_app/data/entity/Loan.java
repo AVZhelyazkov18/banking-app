@@ -1,13 +1,14 @@
 package bg.nbu.banking_app.data.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.Set;
 
+@Getter
+@Setter
 @Entity
 public class Loan extends BaseEntity {
     @Column(name = "amount_disburesd")
@@ -22,6 +23,7 @@ public class Loan extends BaseEntity {
     @ManyToOne
     private Customer customer;
 
-    @OneToMany
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
+    @JoinColumn(name = "id")
     private Set<PaymentPlan> paymentPlans;
 }

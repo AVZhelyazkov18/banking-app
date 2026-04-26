@@ -1,7 +1,7 @@
 package bg.nbu.banking_app.controller;
 
-import bg.nbu.banking_app.data.dto.CompanyDTO;
-import bg.nbu.banking_app.data.dto.UpdateCompanyDTO;
+import bg.nbu.banking_app.data.dto.Customers.Company.CompanyDTO;
+import bg.nbu.banking_app.data.dto.Customers.Company.UpdateCompanyDTO;
 import bg.nbu.banking_app.service.CompanyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
