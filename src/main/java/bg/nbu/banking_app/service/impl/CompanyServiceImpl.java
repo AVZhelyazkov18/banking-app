@@ -14,8 +14,8 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class CompanyServiceImpl implements CompanyService {
-    CompanyRepository companyRepository;
-    MapperUtil mapperUtil;
+    private final CompanyRepository companyRepository;
+    private final MapperUtil mapperUtil;
 
     @Override
     public List<CompanyDTO> getCompanies() {

@@ -14,8 +14,8 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class PersonServiceImpl implements PersonService {
-    PersonRepository personRepository;
-    MapperUtil mapperUtil;
+    private final PersonRepository personRepository;
+    private final MapperUtil mapperUtil;
 
     @Override
     public List<PersonDTO> getPeople() {
