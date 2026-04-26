@@ -6,12 +6,7 @@ import lombok.Setter;
 
 @Entity
 @Getter
-public class Person {
-    @OneToOne
-    @JoinColumn(name = "customer_id")
-    @MapsId
-    private Customer customer;
-    
+public class Person extends Customer {
     @Setter
     @Column(name = "first_name")
     private String firstName;
