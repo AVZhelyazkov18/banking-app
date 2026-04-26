@@ -15,7 +15,8 @@ public class BankAccount extends BaseEntity {
     @Setter
     @Column(name = "balance")
     private BigDecimal balance;
-    
+
+    @Setter
     @Column(name = "status")
     private boolean status;
     
