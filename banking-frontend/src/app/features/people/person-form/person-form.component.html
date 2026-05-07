@@ -1,0 +1,43 @@
+<div class="row justify-content-center mt-4">
+  <div class="col-md-5">
+    <div class="card p-4 shadow-sm">
+      <h3 class="mb-3">{{ isEditMode ? 'Edit Person' : 'Create Person' }}</h3>
+      <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label class="form-label">First Name</label>
+          <input type="text" class="form-control" formControlName="firstName"
+            [class.is-invalid]="form.get('firstName')!.invalid && form.get('firstName')!.touched">
+          <div class="invalid-feedback">
+            <span *ngIf="form.get('firstName')!.errors?.['required']">First name is required.</span>
+            <span *ngIf="form.get('firstName')!.errors?.['minlength']">Minimum 2 characters.</span>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Last Name</label>
+          <input type="text" class="form-control" formControlName="lastName"
+            [class.is-invalid]="form.get('lastName')!.invalid && form.get('lastName')!.touched">
+          <div class="invalid-feedback">
+            <span *ngIf="form.get('lastName')!.errors?.['required']">Last name is required.</span>
+            <span *ngIf="form.get('lastName')!.errors?.['minlength']">Minimum 2 characters.</span>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">PIN</label>
+          <input type="text" class="form-control" formControlName="pin"
+            [class.is-invalid]="form.get('pin')!.invalid && form.get('pin')!.touched">
+          <div class="invalid-feedback">
+            <span *ngIf="form.get('pin')!.errors?.['required']">PIN is required.</span>
+            <span *ngIf="form.get('pin')!.errors?.['pattern']">PIN must be exactly 10 digits.</span>
+          </div>
+        </div>
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
+            {{ isEditMode ? 'Save Changes' : 'Create' }}
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

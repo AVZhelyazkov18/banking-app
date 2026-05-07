@@ -1,0 +1,40 @@
+<div class="row justify-content-center mt-5">
+  <div class="col-md-4">
+    <div class="card p-4 shadow-sm">
+      <h3 class="mb-3">Register</h3>
+      <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label class="form-label">Username</label>
+          <input type="text" class="form-control" formControlName="username"
+            [class.is-invalid]="form.get('username')!.invalid && form.get('username')!.touched">
+          <div class="invalid-feedback">
+            <span *ngIf="form.get('username')!.errors?.['required']">Username is required.</span>
+            <span *ngIf="form.get('username')!.errors?.['minlength']">Minimum 3 characters.</span>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Password</label>
+          <input type="password" class="form-control" formControlName="password"
+            [class.is-invalid]="form.get('password')!.invalid && form.get('password')!.touched">
+          <div class="invalid-feedback">
+            <span *ngIf="form.get('password')!.errors?.['required']">Password is required.</span>
+            <span *ngIf="form.get('password')!.errors?.['minlength']">Minimum 8 characters.</span>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Role</label>
+          <select class="form-control" formControlName="role"
+            [class.is-invalid]="form.get('role')!.invalid && form.get('role')!.touched">
+            <option value="">-- Select role --</option>
+            <option value="ROLE_USER">User</option>
+            <option value="ROLE_ADMIN">Admin</option>
+          </select>
+          <div class="invalid-feedback">Role is required.</div>
+        </div>
+        <button type="submit" class="btn btn-primary w-100" [disabled]="form.invalid">Register</button>
+      </form>
+      <p class="mt-3 text-center">Have an account? <a routerLink="/login">Login</a></p>
+    </div>
+  </div>
+</div>
