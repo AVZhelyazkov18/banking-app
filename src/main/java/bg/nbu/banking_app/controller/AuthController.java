@@ -33,7 +33,7 @@ public class AuthController {
         TokenPair tokenPair = authService.register(request);
         setAuthCookies(response, tokenPair);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new AuthResponse(tokenPair.getUsername(), tokenPair.getRole()));
+                .body(new AuthResponse(tokenPair.getEmail(), tokenPair.getRole()));
     }
 
     @PostMapping("/login")
@@ -41,7 +41,7 @@ public class AuthController {
                                                HttpServletResponse response) {
         TokenPair tokenPair = authService.login(request);
         setAuthCookies(response, tokenPair);
-        return ResponseEntity.ok(new AuthResponse(tokenPair.getUsername(), tokenPair.getRole()));
+        return ResponseEntity.ok(new AuthResponse(tokenPair.getEmail(), tokenPair.getRole()));
     }
 
     @PostMapping("/refresh")
@@ -54,7 +54,7 @@ public class AuthController {
 
         TokenPair tokenPair = authService.refresh(refreshToken);
         setAuthCookies(response, tokenPair);
-        return ResponseEntity.ok(new AuthResponse(tokenPair.getUsername(), tokenPair.getRole()));
+        return ResponseEntity.ok(new AuthResponse(tokenPair.getEmail(), tokenPair.getRole()));
     }
 
     @GetMapping("/me")

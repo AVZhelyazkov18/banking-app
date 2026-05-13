@@ -8,7 +8,7 @@ import { LoginRequest, RegisterRequest, AuthResponse } from '../../models/auth.m
 export class AuthService {
   private apiUrl = 'http://localhost:8080/api/auth';
 
-  private username: string | null = null;
+  private email: string | null = null;
   private role: string | null = null;
 
   constructor(private http: HttpClient, private router: Router) {}
@@ -16,7 +16,7 @@ export class AuthService {
   login(req: LoginRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, req, { withCredentials: true }).pipe(
       tap(response => {
-        this.username = response.username;
+        this.email = response.email;
         this.role = response.role;
       })
     );
@@ -25,7 +25,7 @@ export class AuthService {
   register(req: RegisterRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/register`, req, { withCredentials: true }).pipe(
       tap(response => {
-        this.username = response.username;
+        this.email = response.email;
         this.role = response.role;
       })
     );
@@ -34,7 +34,7 @@ export class AuthService {
   logout(): void {
     this.http.post(`${this.apiUrl}/logout`, {}, { withCredentials: true }).subscribe({
       complete: () => {
-        this.username = null;
+        this.email = null;
         this.role = null;
         this.router.navigate(['/login']);
       }
@@ -44,21 +44,21 @@ export class AuthService {
   me(): Observable<AuthResponse> {
     return this.http.get<AuthResponse>(`${this.apiUrl}/me`, { withCredentials: true }).pipe(
       tap(response => {
-        this.username = response.username;
+        this.email = response.email;
         this.role = response.role;
       })
     );
   }
 
   isLoggedIn(): boolean {
-    return this.username !== null;
+    return this.email !== null;
   }
 
   getRole(): string | null {
     return this.role;
   }
 
-  getUsername(): string | null {
-    return this.username;
+  getEmail(): string | null {
+    return this.email;
   }
 }

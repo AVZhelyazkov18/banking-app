@@ -1,0 +1,43 @@
+<div class="row justify-content-center mt-4">
+  <div class="col-md-5">
+    <div class="card p-4 shadow-sm">
+      <h3 class="mb-3">{{ isEditMode ? 'Edit Loan' : 'Create Loan' }}</h3>
+      <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label class="form-label">Amount Disbursed</label>
+          <input type="number" step="0.01" class="form-control" formControlName="amountDisbursed"
+            [class.is-invalid]="form.get('amountDisbursed')!.invalid && form.get('amountDisbursed')!.touched">
+          <div class="invalid-feedback">
+            <span *ngIf="form.get('amountDisbursed')!.errors?.['required']">Amount is required.</span>
+            <span *ngIf="form.get('amountDisbursed')!.errors?.['min']">Amount must be at least 0.</span>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Payment Term (months)</label>
+          <input type="number" class="form-control" formControlName="paymentTerm"
+            [class.is-invalid]="form.get('paymentTerm')!.invalid && form.get('paymentTerm')!.touched">
+          <div class="invalid-feedback">
+            <span *ngIf="form.get('paymentTerm')!.errors?.['required']">Payment term is required.</span>
+            <span *ngIf="form.get('paymentTerm')!.errors?.['min']">Must be at least 1 month.</span>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Loan Type</label>
+          <select class="form-select" formControlName="loanTypeId"
+            [class.is-invalid]="form.get('loanTypeId')!.invalid && form.get('loanTypeId')!.touched">
+            <option [ngValue]="null" disabled>Select a loan type</option>
+            <option *ngFor="let lt of loanTypes" [ngValue]="lt.id">{{ lt.creditName }}</option>
+          </select>
+          <div class="invalid-feedback">Loan type is required.</div>
+        </div>
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
+            {{ isEditMode ? 'Save Changes' : 'Create' }}
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

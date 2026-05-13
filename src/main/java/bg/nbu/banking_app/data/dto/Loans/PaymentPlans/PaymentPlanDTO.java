@@ -12,6 +12,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @ToString
 public class PaymentPlanDTO {
+    private Long id;
     private BigDecimal contributionAmount;
     private BigDecimal principalPortion;
     private BigDecimal interestPortion;

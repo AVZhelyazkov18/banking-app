@@ -35,7 +35,7 @@ public class PersonController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteCompany(@PathVariable long id) {
+    public void deletePerson(@PathVariable long id) {
         this.personService.deletePerson(id);
     }
 }

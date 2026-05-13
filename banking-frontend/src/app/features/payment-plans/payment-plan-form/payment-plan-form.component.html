@@ -1,0 +1,49 @@
+<div class="row justify-content-center mt-4">
+  <div class="col-md-5">
+    <div class="card p-4 shadow-sm">
+      <h3 class="mb-3">{{ isEditMode ? 'Edit Payment Plan' : 'Create Payment Plan' }}</h3>
+      <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label class="form-label">Date</label>
+          <input type="date" class="form-control" formControlName="date"
+            [class.is-invalid]="form.get('date')!.invalid && form.get('date')!.touched">
+          <div class="invalid-feedback">Date is required.</div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Contribution Amount</label>
+          <input type="number" step="0.01" class="form-control" formControlName="contributionAmount"
+            [class.is-invalid]="form.get('contributionAmount')!.invalid && form.get('contributionAmount')!.touched">
+          <div class="invalid-feedback">
+            <span *ngIf="form.get('contributionAmount')!.errors?.['required']">Contribution amount is required.</span>
+            <span *ngIf="form.get('contributionAmount')!.errors?.['min']">Must be at least 0.</span>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Principal Portion</label>
+          <input type="number" step="0.01" class="form-control" formControlName="principalPortion"
+            [class.is-invalid]="form.get('principalPortion')!.invalid && form.get('principalPortion')!.touched">
+          <div class="invalid-feedback">
+            <span *ngIf="form.get('principalPortion')!.errors?.['required']">Principal portion is required.</span>
+            <span *ngIf="form.get('principalPortion')!.errors?.['min']">Must be at least 0.</span>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Interest Portion</label>
+          <input type="number" step="0.01" class="form-control" formControlName="interestPortion"
+            [class.is-invalid]="form.get('interestPortion')!.invalid && form.get('interestPortion')!.touched">
+          <div class="invalid-feedback">
+            <span *ngIf="form.get('interestPortion')!.errors?.['required']">Interest portion is required.</span>
+            <span *ngIf="form.get('interestPortion')!.errors?.['min']">Must be at least 0.</span>
+          </div>
+        </div>
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
+            {{ isEditMode ? 'Save Changes' : 'Create' }}
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

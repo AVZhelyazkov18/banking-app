@@ -4,6 +4,7 @@ import bg.nbu.banking_app.data.dto.BankAccount.BankAccountDTO;
 import bg.nbu.banking_app.data.dto.BankAccount.UpdateBankAccountDTO;
 import bg.nbu.banking_app.service.BankAccountService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +17,11 @@ public class BankAccountController {
 
     @GetMapping
     public List<BankAccountDTO> getAllBankAccounts() {return bankAccountService.getAllBankAccounts();}
+
+    @GetMapping("/my")
+    public List<BankAccountDTO> getMyBankAccounts(Authentication authentication) {
+        return bankAccountService.getMyBankAccounts(authentication.getName());
+    }
 
     @GetMapping("/{id}")
     public BankAccountDTO getBankAccount(@PathVariable long id) { return  this.bankAccountService.getBankAccount(id);}

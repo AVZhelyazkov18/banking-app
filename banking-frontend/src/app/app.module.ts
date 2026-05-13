@@ -14,17 +14,35 @@ import { PeopleListComponent } from './features/people/people-list/people-list.c
 import { PersonFormComponent } from './features/people/person-form/person-form.component';
 import { CompanyListComponent } from './features/companies/company-list/company-list.component';
 import { CompanyFormComponent } from './features/companies/company-form/company-form.component';
+import { BankAccountListComponent } from './features/bank-accounts/bank-account-list/bank-account-list.component';
+import { BankAccountFormComponent } from './features/bank-accounts/bank-account-form/bank-account-form.component';
+import { LoanTypeListComponent } from './features/loan-types/loan-type-list/loan-type-list.component';
+import { LoanTypeFormComponent } from './features/loan-types/loan-type-form/loan-type-form.component';
+import { LoanListComponent } from './features/loans/loan-list/loan-list.component';
+import { LoanFormComponent } from './features/loans/loan-form/loan-form.component';
+import { PaymentPlanListComponent } from './features/payment-plans/payment-plan-list/payment-plan-list.component';
+import { PaymentPlanFormComponent } from './features/payment-plans/payment-plan-form/payment-plan-form.component';
+import { HomeComponent } from './features/home/home.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    HomeComponent,
     NavbarComponent,
     LoginComponent,
     RegisterComponent,
     PeopleListComponent,
     PersonFormComponent,
     CompanyListComponent,
-    CompanyFormComponent
+    CompanyFormComponent,
+    BankAccountListComponent,
+    BankAccountFormComponent,
+    LoanTypeListComponent,
+    LoanTypeFormComponent,
+    LoanListComponent,
+    LoanFormComponent,
+    PaymentPlanListComponent,
+    PaymentPlanFormComponent
   ],
   imports: [
     BrowserModule,

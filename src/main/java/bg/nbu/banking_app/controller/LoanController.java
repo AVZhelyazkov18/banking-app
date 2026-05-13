@@ -3,6 +3,7 @@ package bg.nbu.banking_app.controller;
 import bg.nbu.banking_app.data.dto.Loans.ClientLoans.LoanDTO;
 import bg.nbu.banking_app.service.LoanService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +17,11 @@ public class LoanController {
     @GetMapping
     public List<LoanDTO> getLoans() {
         return loanService.getLoans();
+    }
+
+    @GetMapping("/my")
+    public List<LoanDTO> getMyLoans(Authentication authentication) {
+        return loanService.getMyLoans(authentication.getName());
     }
 
     @GetMapping("/{id}")

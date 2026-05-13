@@ -1,5 +1,6 @@
 package bg.nbu.banking_app.data.dto.Auth;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +12,8 @@ import lombok.Setter;
 public class LoginRequest {
 
     @NotBlank
-    private String username;
+    @Email
+    private String email;
 
     @NotBlank
     private String password;

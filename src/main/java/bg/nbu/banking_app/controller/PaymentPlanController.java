@@ -19,7 +19,7 @@ public class PaymentPlanController {
     }
 
     @GetMapping("/{id}")
-    public PaymentPlanDTO getPaymentPlane(@PathVariable long id) {
+    public PaymentPlanDTO getPaymentPlan(@PathVariable long id) {
         return this.paymentPlanService.getPaymentPlan(id);
     }
 

@@ -11,4 +11,5 @@ public interface BankAccountService {
     BankAccountDTO createBankAccount(BankAccountDTO company);
     BankAccountDTO updateBankAccount(UpdateBankAccountDTO company, long id);
     void deleteBankAccount(long id);
+    List<BankAccountDTO> getMyBankAccounts(String username);
 }

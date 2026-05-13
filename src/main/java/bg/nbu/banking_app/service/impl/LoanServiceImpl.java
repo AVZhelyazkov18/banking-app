@@ -2,18 +2,27 @@ package bg.nbu.banking_app.service.impl;
 
 import bg.nbu.banking_app.data.dto.Loans.ClientLoans.LoanDTO;
 import bg.nbu.banking_app.data.entity.Loan;
+import bg.nbu.banking_app.data.entity.PaymentPlan;
+import bg.nbu.banking_app.data.entity.User;
 import bg.nbu.banking_app.data.repository.LoanRepository;
+import bg.nbu.banking_app.data.repository.PaymentPlanRepository;
+import bg.nbu.banking_app.data.repository.UserRepository;
 import bg.nbu.banking_app.service.LoanService;
 import bg.nbu.banking_app.util.MapperUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class LoanServiceImpl implements LoanService {
     private final LoanRepository loanRepository;
+    private final PaymentPlanRepository paymentPlanRepository;
+    private final UserRepository userRepository;
     private final MapperUtil mapperUtil;
 
     @Override
@@ -60,5 +69,24 @@ public class LoanServiceImpl implements LoanService {
     @Override
     public void deleteLoan(long id) {
         this.loanRepository.deleteById(id);
+    }
+
+    @Override
+    public List<LoanDTO> getMyLoans(String username) {
+        User user = userRepository.findByEmail(username)
+                .orElseThrow(() -> new RuntimeException("User not found: " + username));
+        if (user.getCustomer() == null) return List.of();
+        List<Loan> loans = loanRepository.findByCustomerId(user.getCustomer().getId());
+        return loans.stream().map(loan -> {
+            LoanDTO dto = this.mapperUtil.getModelMapper().map(loan, LoanDTO.class);
+            paymentPlanRepository.findByLoanId(loan.getId()).stream()
+                    .filter(pp -> pp.getDate() != null && !pp.getDate().isBefore(LocalDate.now()))
+                    .min(Comparator.comparing(PaymentPlan::getDate))
+                    .ifPresent(pp -> {
+                        dto.setCurrentPayment(pp.getContributionAmount());
+                        dto.setNextPaymentDate(pp.getDate());
+                    });
+            return dto;
+        }).collect(Collectors.toList());
     }
 }

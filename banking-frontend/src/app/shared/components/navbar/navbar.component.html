@@ -3,9 +3,14 @@
     <a class="navbar-brand" routerLink="/">Banking App</a>
     <div class="navbar-nav ms-auto d-flex flex-row align-items-center gap-3">
       <ng-container *ngIf="authService.isLoggedIn(); else loggedOut">
+        <a class="nav-link text-white" routerLink="/home" routerLinkActive="fw-bold">Home</a>
         <a class="nav-link text-white" routerLink="/people" routerLinkActive="fw-bold">People</a>
         <a class="nav-link text-white" routerLink="/companies" routerLinkActive="fw-bold">Companies</a>
-        <span class="text-white-50 small">Welcome, {{ authService.getUsername() }}</span>
+        <a class="nav-link text-white" routerLink="/bank-accounts" routerLinkActive="fw-bold">Bank Accounts</a>
+        <a class="nav-link text-white" routerLink="/loan-types" routerLinkActive="fw-bold">Loan Types</a>
+        <a class="nav-link text-white" routerLink="/loans" routerLinkActive="fw-bold">Loans</a>
+        <a class="nav-link text-white" routerLink="/payment-plans" routerLinkActive="fw-bold">Payment Plans</a>
+        <span class="text-white-50 small">Welcome, {{ authService.getEmail() }}</span>
         <button class="btn btn-outline-light btn-sm" (click)="logout()">Logout</button>
       </ng-container>
       <ng-template #loggedOut>

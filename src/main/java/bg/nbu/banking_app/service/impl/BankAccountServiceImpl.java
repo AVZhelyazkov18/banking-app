@@ -5,7 +5,9 @@ import bg.nbu.banking_app.data.dto.BankAccount.UpdateBankAccountDTO;
 import bg.nbu.banking_app.data.dto.Customers.Company.CompanyDTO;
 import bg.nbu.banking_app.data.entity.BankAccount;
 import bg.nbu.banking_app.data.entity.Company;
+import bg.nbu.banking_app.data.entity.User;
 import bg.nbu.banking_app.data.repository.BankAccountRepository;
+import bg.nbu.banking_app.data.repository.UserRepository;
 import bg.nbu.banking_app.service.BankAccountService;
 import bg.nbu.banking_app.util.MapperUtil;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BankAccountServiceImpl implements BankAccountService {
     private final BankAccountRepository bankAccountRepository;
+    private final UserRepository userRepository;
     private final MapperUtil mapperUtil;
 
     @Override
@@ -63,4 +66,15 @@ public class BankAccountServiceImpl implements BankAccountService {
     //See if this is even needed
     @Override
     public void deleteBankAccount(long id) { this.bankAccountRepository.deleteById(id);}
+
+    @Override
+    public List<BankAccountDTO> getMyBankAccounts(String username) {
+        User user = userRepository.findByEmail(username)
+                .orElseThrow(() -> new RuntimeException("User not found: " + username));
+        if (user.getCustomer() == null) return List.of();
+        return this.mapperUtil.mapList(
+                bankAccountRepository.findByCustomerId(user.getCustomer().getId()),
+                BankAccountDTO.class
+        );
+    }
 }

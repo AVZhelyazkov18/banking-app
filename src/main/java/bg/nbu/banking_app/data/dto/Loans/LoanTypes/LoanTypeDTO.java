@@ -9,6 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class LoanTypeDTO {
+    private Long id;
     private String creditName;
     private int creditDisbursedMin;
     private int creditDisbursedMax;

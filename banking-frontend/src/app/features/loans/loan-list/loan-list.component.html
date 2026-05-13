@@ -1,0 +1,33 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h3>Loans</h3>
+  <button class="btn btn-primary" (click)="create()">+ Create</button>
+</div>
+
+<div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Amount Disbursed</th>
+      <th>Payment Term (months)</th>
+      <th>Loan Type</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let loan of loans; let i = index">
+      <td>{{ i + 1 }}</td>
+      <td>{{ loan.amountDisbursed }}</td>
+      <td>{{ loan.paymentTerm }}</td>
+      <td>{{ loan.loanType.creditName ?? loan.loanType.id }}</td>
+      <td>
+        <button class="btn btn-secondary btn-sm me-2" (click)="edit(loan.id)">Edit</button>
+        <button class="btn btn-danger btn-sm" (click)="delete(loan.id)">Delete</button>
+      </td>
+    </tr>
+    <tr *ngIf="loans.length === 0">
+      <td colspan="5" class="text-center text-muted">No loans found.</td>
+    </tr>
+  </tbody>
+</table>

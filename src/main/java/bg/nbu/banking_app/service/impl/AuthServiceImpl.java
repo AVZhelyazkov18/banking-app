@@ -29,12 +29,12 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public TokenPair register(RegisterRequest request) {
-        if (userRepository.existsByUsername(request.getUsername())) {
-            throw new IllegalArgumentException("Username already taken: " + request.getUsername());
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new IllegalArgumentException("Email already taken: " + request.getEmail());
         }
 
         User user = User.builder()
-                .username(request.getUsername())
+                .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.valueOf(request.getRole()))
                 .build();
@@ -47,21 +47,21 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public TokenPair login(LoginRequest request) {
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
 
-        User user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + request.getUsername()));
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + request.getEmail()));
 
         return buildTokenPair(user);
     }
 
     @Override
     public TokenPair refresh(String refreshToken) {
-        final String username = jwtUtil.extractUsername(refreshToken);
+        final String email = jwtUtil.extractUsername(refreshToken);
 
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
 
         UserDetails userDetails = new UserDetailsImpl(user);
 
@@ -74,10 +74,10 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse me(String accessToken) {
-        final String username = jwtUtil.extractUsername(accessToken);
+        final String email = jwtUtil.extractUsername(accessToken);
 
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
 
         UserDetails userDetails = new UserDetailsImpl(user);
 
@@ -85,13 +85,13 @@ public class AuthServiceImpl implements AuthService {
             throw new IllegalArgumentException("Invalid access token");
         }
 
-        return new AuthResponse(user.getUsername(), user.getRole().name());
+        return new AuthResponse(user.getEmail(), user.getRole().name());
     }
 
     private TokenPair buildTokenPair(User user) {
         UserDetails userDetails = new UserDetailsImpl(user);
         String accessToken = jwtUtil.generateToken(userDetails);
         String refreshToken = jwtUtil.generateRefreshToken(userDetails);
-        return new TokenPair(accessToken, refreshToken, user.getUsername(), user.getRole().name());
+        return new TokenPair(accessToken, refreshToken, user.getEmail(), user.getRole().name());
     }
 }
