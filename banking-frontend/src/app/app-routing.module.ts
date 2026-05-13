@@ -15,12 +15,14 @@ import { LoanFormComponent } from './features/loans/loan-form/loan-form.componen
 import { PaymentPlanListComponent } from './features/payment-plans/payment-plan-list/payment-plan-list.component';
 import { PaymentPlanFormComponent } from './features/payment-plans/payment-plan-form/payment-plan-form.component';
 import { HomeComponent } from './features/home/home.component';
+import { ProfileComponent } from './features/profile/profile.component';
 import { AuthGuard } from './core/guards/auth.guard';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
+  { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
   { path: 'people', component: PeopleListComponent, canActivate: [AuthGuard] },
   { path: 'people/new', component: PersonFormComponent, canActivate: [AuthGuard] },
   { path: 'people/:id/edit', component: PersonFormComponent, canActivate: [AuthGuard] },

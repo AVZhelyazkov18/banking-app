@@ -4,6 +4,8 @@ import bg.nbu.banking_app.data.dto.Auth.AuthResponse;
 import bg.nbu.banking_app.data.dto.Auth.LoginRequest;
 import bg.nbu.banking_app.data.dto.Auth.RegisterRequest;
 import bg.nbu.banking_app.data.dto.Auth.TokenPair;
+import bg.nbu.banking_app.data.dto.Auth.UpdateProfileRequest;
+import bg.nbu.banking_app.data.dto.Auth.UserProfileResponse;
 import bg.nbu.banking_app.security.JwtUtil;
 import bg.nbu.banking_app.service.AuthService;
 import jakarta.servlet.http.Cookie;
@@ -66,6 +68,23 @@ public class AuthController {
 
         AuthResponse authResponse = authService.me(accessToken);
         return ResponseEntity.ok(authResponse);
+    }
+
+    @GetMapping("/profile")
+    public ResponseEntity<UserProfileResponse> getProfile(HttpServletRequest request) {
+        String accessToken = extractCookie(request, "access_token");
+        if (accessToken == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        String email = jwtUtil.extractUsername(accessToken);
+        return ResponseEntity.ok(authService.getProfile(email));
+    }
+
+    @PostMapping("/profile")
+    public ResponseEntity<UserProfileResponse> updateProfile(@Valid @RequestBody UpdateProfileRequest request,
+                                                              HttpServletRequest httpRequest) {
+        String accessToken = extractCookie(httpRequest, "access_token");
+        if (accessToken == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        String email = jwtUtil.extractUsername(accessToken);
+        return ResponseEntity.ok(authService.updateProfile(email, request));
     }
 
     @PostMapping("/logout")

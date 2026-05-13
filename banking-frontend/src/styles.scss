@@ -267,6 +267,52 @@ body {
   padding-bottom: 2rem;
 }
 
+/* ===== Navbar icon links with tooltip ===== */
+.nav-icon-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4rem 0.55rem !important;
+}
+.nav-icon-link .nav-label {
+  display: none;
+}
+/* Tooltip shown on desktop hover */
+@media (min-width: 992px) {
+  .nav-icon-link::after {
+    content: attr(title);
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(15, 32, 71, 0.92);
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 500;
+    white-space: nowrap;
+    padding: 3px 9px;
+    border-radius: 6px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s;
+    letter-spacing: 0.3px;
+  }
+  .nav-icon-link:hover::after {
+    opacity: 1;
+  }
+}
+/* On mobile: show label text instead of tooltip */
+@media (max-width: 991px) {
+  .nav-icon-link .nav-label {
+    display: inline;
+    margin-left: 0.5rem;
+  }
+}
+.nav-icon-link.active i,
+.nav-icon-link.fw-bold i {
+  color: var(--accent);
+}
+
 /* ===== Responsive table scroll ===== */
 @media (max-width: 767px) {
   .table-wrapper {

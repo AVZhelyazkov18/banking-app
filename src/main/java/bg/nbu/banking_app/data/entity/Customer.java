@@ -12,6 +12,9 @@ import java.util.Set;
 @Table(name = "customer")
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Customer extends BaseEntity {
+    @Column(name = "client_number", unique = true)
+    private String clientNumber;
+
     @OneToMany(mappedBy = "customer")
     private Set<BankAccount> bankAccounts;
 

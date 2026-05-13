@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
-import { LoginRequest, RegisterRequest, AuthResponse } from '../../models/auth.model';
+import { LoginRequest, RegisterRequest, AuthResponse, UserProfileResponse, UpdateProfileRequest } from '../../models/auth.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -60,5 +60,13 @@ export class AuthService {
 
   getEmail(): string | null {
     return this.email;
+  }
+
+  getProfile(): Observable<UserProfileResponse> {
+    return this.http.get<UserProfileResponse>(`${this.apiUrl}/profile`, { withCredentials: true });
+  }
+
+  updateProfile(req: UpdateProfileRequest): Observable<UserProfileResponse> {
+    return this.http.post<UserProfileResponse>(`${this.apiUrl}/profile`, req, { withCredentials: true });
   }
 }

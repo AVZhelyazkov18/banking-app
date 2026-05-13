@@ -20,4 +20,17 @@ public class RegisterRequest {
 
     @NotBlank
     private String role;
+
+    @NotBlank
+    private String firstName;
+
+    @NotBlank
+    private String lastName;
+
+    @NotBlank
+    private String pin;
+
+    private String phone;
+
+    private String address;
 }

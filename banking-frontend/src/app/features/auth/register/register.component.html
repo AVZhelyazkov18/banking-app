@@ -6,6 +6,8 @@
     <div *ngIf="errorMessage" class="alert alert-danger py-2 small">{{ errorMessage }}</div>
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+      <!-- Account Credentials -->
       <div class="mb-3">
         <label class="form-label">Email address</label>
         <div class="input-group">
@@ -32,7 +34,7 @@
         </div>
       </div>
 
-      <div class="mb-4">
+      <div class="mb-3">
         <label class="form-label">Role</label>
         <div class="input-group">
           <span class="input-group-text"><i class="bi bi-person-badge"></i></span>
@@ -45,6 +47,66 @@
         </div>
         <div class="invalid-feedback d-block" *ngIf="form.get('role')!.invalid && form.get('role')!.touched">
           Role is required.
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <hr class="my-3">
+      <p class="text-muted small mb-3" style="font-size:0.8rem;letter-spacing:0.5px;text-transform:uppercase;">Personal Identity</p>
+
+      <div class="row">
+        <div class="col-6 mb-3">
+          <label class="form-label">First Name</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-person"></i></span>
+            <input type="text" class="form-control" formControlName="firstName" placeholder="First name"
+              [class.is-invalid]="form.get('firstName')!.invalid && form.get('firstName')!.touched">
+          </div>
+          <div class="invalid-feedback d-block" *ngIf="form.get('firstName')!.invalid && form.get('firstName')!.touched">
+            <span *ngIf="form.get('firstName')!.errors?.['required']">Required.</span>
+            <span *ngIf="form.get('firstName')!.errors?.['minlength']">Min. 2 chars.</span>
+          </div>
+        </div>
+        <div class="col-6 mb-3">
+          <label class="form-label">Last Name</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-person"></i></span>
+            <input type="text" class="form-control" formControlName="lastName" placeholder="Last name"
+              [class.is-invalid]="form.get('lastName')!.invalid && form.get('lastName')!.touched">
+          </div>
+          <div class="invalid-feedback d-block" *ngIf="form.get('lastName')!.invalid && form.get('lastName')!.touched">
+            <span *ngIf="form.get('lastName')!.errors?.['required']">Required.</span>
+            <span *ngIf="form.get('lastName')!.errors?.['minlength']">Min. 2 chars.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">EGN / PIN <span class="text-muted small">(10 digits)</span></label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-shield-lock"></i></span>
+          <input type="text" class="form-control font-monospace" formControlName="pin" placeholder="0000000000"
+            [class.is-invalid]="form.get('pin')!.invalid && form.get('pin')!.touched">
+        </div>
+        <div class="invalid-feedback d-block" *ngIf="form.get('pin')!.invalid && form.get('pin')!.touched">
+          <span *ngIf="form.get('pin')!.errors?.['required']">EGN is required.</span>
+          <span *ngIf="form.get('pin')!.errors?.['pattern']">Must be exactly 10 digits.</span>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Phone <span class="text-muted small">(optional)</span></label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+          <input type="text" class="form-control" formControlName="phone" placeholder="+359 88 888 8888">
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label">Address <span class="text-muted small">(optional)</span></label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
+          <input type="text" class="form-control" formControlName="address" placeholder="City, Street">
         </div>
       </div>
 
