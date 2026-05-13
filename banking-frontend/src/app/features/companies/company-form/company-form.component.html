@@ -1,43 +1,62 @@
-<div class="row justify-content-center mt-4">
-  <div class="col-md-5">
-    <div class="card p-4 shadow-sm">
-      <h3 class="mb-3">{{ isEditMode ? 'Edit Company' : 'Create Company' }}</h3>
-      <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
-      <form [formGroup]="form" (ngSubmit)="onSubmit()">
-        <div class="mb-3">
-          <label class="form-label">Company Name</label>
-          <input type="text" class="form-control" formControlName="companyName"
-            [class.is-invalid]="form.get('companyName')!.invalid && form.get('companyName')!.touched">
-          <div class="invalid-feedback">
-            <span *ngIf="form.get('companyName')!.errors?.['required']">Company name is required.</span>
-            <span *ngIf="form.get('companyName')!.errors?.['minlength']">Minimum 2 characters.</span>
+<div class="row justify-content-center mt-2">
+  <div class="col-lg-5 col-md-7">
+    <div class="card">
+      <div class="card-header-accent">
+        <i class="bi bi-building me-2"></i>{{ isEditMode ? 'Edit Company' : 'Create Company' }}
+      </div>
+      <div class="card-body p-4">
+        <div *ngIf="errorMessage" class="alert alert-danger py-2 small">{{ errorMessage }}</div>
+
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+          <div class="mb-3">
+            <label class="form-label">Company Name</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-building"></i></span>
+              <input type="text" class="form-control" formControlName="companyName" placeholder="Company name"
+                [class.is-invalid]="form.get('companyName')!.invalid && form.get('companyName')!.touched">
+            </div>
+            <div class="invalid-feedback d-block" *ngIf="form.get('companyName')!.invalid && form.get('companyName')!.touched">
+              <span *ngIf="form.get('companyName')!.errors?.['required']">Company name is required.</span>
+              <span *ngIf="form.get('companyName')!.errors?.['minlength']">Minimum 2 characters.</span>
+            </div>
           </div>
-        </div>
-        <div class="mb-3">
-          <label class="form-label">EIK</label>
-          <input type="text" class="form-control" formControlName="eik"
-            [class.is-invalid]="form.get('eik')!.invalid && form.get('eik')!.touched">
-          <div class="invalid-feedback">
-            <span *ngIf="form.get('eik')!.errors?.['required']">EIK is required.</span>
-            <span *ngIf="form.get('eik')!.errors?.['pattern']">EIK must be exactly 9 digits.</span>
+
+          <div class="mb-3">
+            <label class="form-label">EIK (9 digits)</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-upc"></i></span>
+              <input type="text" class="form-control font-monospace" formControlName="eik" placeholder="000000000"
+                [class.is-invalid]="form.get('eik')!.invalid && form.get('eik')!.touched">
+            </div>
+            <div class="invalid-feedback d-block" *ngIf="form.get('eik')!.invalid && form.get('eik')!.touched">
+              <span *ngIf="form.get('eik')!.errors?.['required']">EIK is required.</span>
+              <span *ngIf="form.get('eik')!.errors?.['pattern']">EIK must be exactly 9 digits.</span>
+            </div>
           </div>
-        </div>
-        <div class="mb-3">
-          <label class="form-label">Representative</label>
-          <input type="text" class="form-control" formControlName="representative"
-            [class.is-invalid]="form.get('representative')!.invalid && form.get('representative')!.touched">
-          <div class="invalid-feedback">
-            <span *ngIf="form.get('representative')!.errors?.['required']">Representative is required.</span>
-            <span *ngIf="form.get('representative')!.errors?.['minlength']">Minimum 2 characters.</span>
+
+          <div class="mb-4">
+            <label class="form-label">Representative</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-person-badge"></i></span>
+              <input type="text" class="form-control" formControlName="representative" placeholder="Representative name"
+                [class.is-invalid]="form.get('representative')!.invalid && form.get('representative')!.touched">
+            </div>
+            <div class="invalid-feedback d-block" *ngIf="form.get('representative')!.invalid && form.get('representative')!.touched">
+              <span *ngIf="form.get('representative')!.errors?.['required']">Representative is required.</span>
+              <span *ngIf="form.get('representative')!.errors?.['minlength']">Minimum 2 characters.</span>
+            </div>
           </div>
-        </div>
-        <div class="d-flex gap-2">
-          <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
-            {{ isEditMode ? 'Save Changes' : 'Create' }}
-          </button>
-          <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
-        </div>
-      </form>
+
+          <div class="d-flex gap-2 mt-4">
+            <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
+              <i class="bi bi-check-lg me-1"></i>{{ isEditMode ? 'Save Changes' : 'Create' }}
+            </button>
+            <button type="button" class="btn btn-outline-secondary" (click)="cancel()">
+              <i class="bi bi-x-lg me-1"></i>Cancel
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </div>
