@@ -1,6 +1,5 @@
 package bg.nbu.banking_app.data.dto.Loans.ClientLoans;
 
-import bg.nbu.banking_app.data.entity.Customer;
 import bg.nbu.banking_app.data.entity.LoanType;
 import lombok.*;
 
@@ -16,5 +15,4 @@ public class LoanDTO {
     private BigDecimal amountDisbursed;
     private int paymentTerm;
     private LoanType loanType;
-    private Customer customer;
 }

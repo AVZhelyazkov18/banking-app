@@ -1,13 +1,13 @@
 package bg.nbu.banking_app.service;
 
 import bg.nbu.banking_app.data.dto.Loans.ClientLoans.LoanDTO;
-import bg.nbu.banking_app.data.entity.Loan;
 
-import java.util.Set;
+import java.util.List;
 
 public interface LoanService {
-    Set<LoanDTO> getUserLoansInfo(long userId);
-    LoanDTO getUserLoanInfoFromId(long loanId);
-    void createUserLoan(LoanDTO loanDTO);
-    void deleteUserLoan(long loanId);
+    List<LoanDTO> getLoans();
+    LoanDTO getLoan(long id);
+    LoanDTO createLoan(LoanDTO loan);
+    LoanDTO updateLoan(LoanDTO loan, long id);
+    void deleteLoan(long id);
 }

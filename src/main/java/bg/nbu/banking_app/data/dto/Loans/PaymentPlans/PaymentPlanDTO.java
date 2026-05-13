@@ -1,16 +1,16 @@
 package bg.nbu.banking_app.data.dto.Loans.PaymentPlans;
 
-import bg.nbu.banking_app.data.entity.Loan;
-import bg.nbu.banking_app.data.entity.PaymentPlan;
-import jakarta.persistence.Column;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ManyToOne;
-import lombok.AllArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+@EqualsAndHashCode
+@Getter
+@Setter
+@NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class PaymentPlanDTO {
     private BigDecimal contributionAmount;
     private BigDecimal principalPortion;
