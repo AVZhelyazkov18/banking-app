@@ -24,6 +24,7 @@ import { PaymentPlanListComponent } from './features/payment-plans/payment-plan-
 import { PaymentPlanFormComponent } from './features/payment-plans/payment-plan-form/payment-plan-form.component';
 import { HomeComponent } from './features/home/home.component';
 import { ProfileComponent } from './features/profile/profile.component';
+import { UserManagementComponent } from './features/user-management/user-management.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { ProfileComponent } from './features/profile/profile.component';
     LoanFormComponent,
     PaymentPlanListComponent,
     PaymentPlanFormComponent,
-    ProfileComponent
+    ProfileComponent,
+    UserManagementComponent
   ],
   imports: [
     BrowserModule,

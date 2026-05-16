@@ -4,6 +4,7 @@ import bg.nbu.banking_app.data.dto.BankAccount.BankAccountDTO;
 import bg.nbu.banking_app.data.dto.BankAccount.UpdateBankAccountDTO;
 import bg.nbu.banking_app.service.BankAccountService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +17,7 @@ public class BankAccountController {
     private final BankAccountService bankAccountService;
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE')")
     public List<BankAccountDTO> getAllBankAccounts() {return bankAccountService.getAllBankAccounts();}
 
     @GetMapping("/my")
@@ -24,14 +26,16 @@ public class BankAccountController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE')")
     public BankAccountDTO getBankAccount(@PathVariable long id) { return  this.bankAccountService.getBankAccount(id);}
 
     @PostMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE')")
     public BankAccountDTO updateBankAccount(@RequestBody UpdateBankAccountDTO bankAccount, @PathVariable long id) {
         return this.bankAccountService.updateBankAccount(bankAccount, id);
     }
 
-    // Do we need to be able to delete bank accounts?
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteBankAccount(@PathVariable long id) {this.bankAccountService.deleteBankAccount(id);}
 }

@@ -34,22 +34,6 @@
         </div>
       </div>
 
-      <div class="mb-3">
-        <label class="form-label">Role</label>
-        <div class="input-group">
-          <span class="input-group-text"><i class="bi bi-person-badge"></i></span>
-          <select class="form-select" formControlName="role"
-            [class.is-invalid]="form.get('role')!.invalid && form.get('role')!.touched">
-            <option value="">— Select role —</option>
-            <option value="ROLE_USER">User</option>
-            <option value="ROLE_ADMIN">Admin</option>
-          </select>
-        </div>
-        <div class="invalid-feedback d-block" *ngIf="form.get('role')!.invalid && form.get('role')!.touched">
-          Role is required.
-        </div>
-      </div>
-
       <!-- Divider -->
       <hr class="my-3">
       <p class="text-muted small mb-3" style="font-size:0.8rem;letter-spacing:0.5px;text-transform:uppercase;">Personal Identity</p>

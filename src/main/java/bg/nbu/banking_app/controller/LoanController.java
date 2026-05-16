@@ -3,6 +3,7 @@ package bg.nbu.banking_app.controller;
 import bg.nbu.banking_app.data.dto.Loans.ClientLoans.LoanDTO;
 import bg.nbu.banking_app.service.LoanService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +16,7 @@ public class LoanController {
     private final LoanService loanService;
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE')")
     public List<LoanDTO> getLoans() {
         return loanService.getLoans();
     }
@@ -25,21 +27,25 @@ public class LoanController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE')")
     public LoanDTO getLoan(@PathVariable long id) {
         return this.loanService.getLoan(id);
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE')")
     public LoanDTO createLoan(@RequestBody LoanDTO loan) {
         return this.loanService.createLoan(loan);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE')")
     public LoanDTO updateLoan(@RequestBody LoanDTO loan, @PathVariable long id) {
         return this.loanService.updateLoan(loan, id);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteLoan(@PathVariable long id) {
         this.loanService.deleteLoan(id);
     }

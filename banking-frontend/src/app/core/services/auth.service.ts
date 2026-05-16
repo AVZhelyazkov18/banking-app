@@ -11,13 +11,18 @@ export class AuthService {
   private email: string | null = null;
   private role: string | null = null;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) {
+    this.email = localStorage.getItem('auth_email');
+    this.role = localStorage.getItem('auth_role');
+  }
 
   login(req: LoginRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, req, { withCredentials: true }).pipe(
       tap(response => {
         this.email = response.email;
         this.role = response.role;
+        localStorage.setItem('auth_email', response.email);
+        localStorage.setItem('auth_role', response.role);
       })
     );
   }
@@ -27,6 +32,8 @@ export class AuthService {
       tap(response => {
         this.email = response.email;
         this.role = response.role;
+        localStorage.setItem('auth_email', response.email);
+        localStorage.setItem('auth_role', response.role);
       })
     );
   }
@@ -36,6 +43,8 @@ export class AuthService {
       complete: () => {
         this.email = null;
         this.role = null;
+        localStorage.removeItem('auth_email');
+        localStorage.removeItem('auth_role');
         this.router.navigate(['/login']);
       }
     });
@@ -46,6 +55,8 @@ export class AuthService {
       tap(response => {
         this.email = response.email;
         this.role = response.role;
+        localStorage.setItem('auth_email', response.email);
+        localStorage.setItem('auth_role', response.role);
       })
     );
   }

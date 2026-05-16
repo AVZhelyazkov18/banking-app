@@ -16,30 +16,35 @@ import { PaymentPlanListComponent } from './features/payment-plans/payment-plan-
 import { PaymentPlanFormComponent } from './features/payment-plans/payment-plan-form/payment-plan-form.component';
 import { HomeComponent } from './features/home/home.component';
 import { ProfileComponent } from './features/profile/profile.component';
+import { UserManagementComponent } from './features/user-management/user-management.component';
 import { AuthGuard } from './core/guards/auth.guard';
+
+const EMPLOYEE_ADMIN = ['ROLE_ADMIN', 'ROLE_EMPLOYEE'];
+const ADMIN_ONLY = ['ROLE_ADMIN'];
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
-  { path: 'people', component: PeopleListComponent, canActivate: [AuthGuard] },
-  { path: 'people/new', component: PersonFormComponent, canActivate: [AuthGuard] },
-  { path: 'people/:id/edit', component: PersonFormComponent, canActivate: [AuthGuard] },
-  { path: 'companies', component: CompanyListComponent, canActivate: [AuthGuard] },
-  { path: 'companies/new', component: CompanyFormComponent, canActivate: [AuthGuard] },
-  { path: 'companies/:id/edit', component: CompanyFormComponent, canActivate: [AuthGuard] },
-  { path: 'bank-accounts', component: BankAccountListComponent, canActivate: [AuthGuard] },
-  { path: 'bank-accounts/:id/edit', component: BankAccountFormComponent, canActivate: [AuthGuard] },
-  { path: 'loan-types', component: LoanTypeListComponent, canActivate: [AuthGuard] },
-  { path: 'loan-types/new', component: LoanTypeFormComponent, canActivate: [AuthGuard] },
-  { path: 'loan-types/:id/edit', component: LoanTypeFormComponent, canActivate: [AuthGuard] },
-  { path: 'loans', component: LoanListComponent, canActivate: [AuthGuard] },
-  { path: 'loans/new', component: LoanFormComponent, canActivate: [AuthGuard] },
-  { path: 'loans/:id/edit', component: LoanFormComponent, canActivate: [AuthGuard] },
-  { path: 'payment-plans', component: PaymentPlanListComponent, canActivate: [AuthGuard] },
-  { path: 'payment-plans/new', component: PaymentPlanFormComponent, canActivate: [AuthGuard] },
-  { path: 'payment-plans/:id/edit', component: PaymentPlanFormComponent, canActivate: [AuthGuard] },
+  { path: 'people', component: PeopleListComponent, canActivate: [AuthGuard], data: { roles: EMPLOYEE_ADMIN } },
+  { path: 'people/new', component: PersonFormComponent, canActivate: [AuthGuard], data: { roles: EMPLOYEE_ADMIN } },
+  { path: 'people/:id/edit', component: PersonFormComponent, canActivate: [AuthGuard], data: { roles: EMPLOYEE_ADMIN } },
+  { path: 'companies', component: CompanyListComponent, canActivate: [AuthGuard], data: { roles: EMPLOYEE_ADMIN } },
+  { path: 'companies/new', component: CompanyFormComponent, canActivate: [AuthGuard], data: { roles: EMPLOYEE_ADMIN } },
+  { path: 'companies/:id/edit', component: CompanyFormComponent, canActivate: [AuthGuard], data: { roles: EMPLOYEE_ADMIN } },
+  { path: 'bank-accounts', component: BankAccountListComponent, canActivate: [AuthGuard], data: { roles: EMPLOYEE_ADMIN } },
+  { path: 'bank-accounts/:id/edit', component: BankAccountFormComponent, canActivate: [AuthGuard], data: { roles: EMPLOYEE_ADMIN } },
+  { path: 'loan-types', component: LoanTypeListComponent, canActivate: [AuthGuard], data: { roles: EMPLOYEE_ADMIN } },
+  { path: 'loan-types/new', component: LoanTypeFormComponent, canActivate: [AuthGuard], data: { roles: ADMIN_ONLY } },
+  { path: 'loan-types/:id/edit', component: LoanTypeFormComponent, canActivate: [AuthGuard], data: { roles: ADMIN_ONLY } },
+  { path: 'loans', component: LoanListComponent, canActivate: [AuthGuard], data: { roles: EMPLOYEE_ADMIN } },
+  { path: 'loans/new', component: LoanFormComponent, canActivate: [AuthGuard], data: { roles: EMPLOYEE_ADMIN } },
+  { path: 'loans/:id/edit', component: LoanFormComponent, canActivate: [AuthGuard], data: { roles: EMPLOYEE_ADMIN } },
+  { path: 'payment-plans', component: PaymentPlanListComponent, canActivate: [AuthGuard], data: { roles: EMPLOYEE_ADMIN } },
+  { path: 'payment-plans/new', component: PaymentPlanFormComponent, canActivate: [AuthGuard], data: { roles: EMPLOYEE_ADMIN } },
+  { path: 'payment-plans/:id/edit', component: PaymentPlanFormComponent, canActivate: [AuthGuard], data: { roles: EMPLOYEE_ADMIN } },
+  { path: 'users', component: UserManagementComponent, canActivate: [AuthGuard], data: { roles: ADMIN_ONLY } },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', redirectTo: '/login' }
 ];

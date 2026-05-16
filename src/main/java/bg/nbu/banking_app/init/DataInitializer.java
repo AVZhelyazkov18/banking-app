@@ -132,6 +132,13 @@ public class DataInitializer implements CommandLineRunner {
         plan2.setLoan(loan2);
         paymentPlanRepository.save(plan2);
 
+        // --- Employee Person ---
+        Person employeePerson = new Person();
+        employeePerson.setFirstName("Anna");
+        employeePerson.setLastName("Stoycheva");
+        setField(employeePerson, "pin", "9203154321");
+        personRepository.save(employeePerson);
+
         // --- Users ---
         User admin = User.builder()
                 .email("admin@bank.com")
@@ -139,6 +146,14 @@ public class DataInitializer implements CommandLineRunner {
                 .role(Role.ROLE_ADMIN)
                 .build();
         userRepository.save(admin);
+
+        User employeeUser = User.builder()
+                .email("employee@bank.com")
+                .password(passwordEncoder.encode("employee123"))
+                .role(Role.ROLE_EMPLOYEE)
+                .customer(employeePerson)
+                .build();
+        userRepository.save(employeeUser);
 
         User ivanUser = User.builder()
                 .email("ivan@bank.com")
