@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
@@ -13,28 +14,8 @@ import java.util.List;
 public class PaymentPlanController {
     private final PaymentPlanService paymentPlanService;
 
-    @GetMapping
-    public List<PaymentPlanDTO> getPaymentPlans() {
-        return paymentPlanService.getPaymentPlans();
-    }
-
-    @GetMapping("/{id}")
-    public PaymentPlanDTO getPaymentPlane(@PathVariable long id) {
-        return this.paymentPlanService.getPaymentPlan(id);
-    }
-
-    @PostMapping
-    public PaymentPlanDTO createPaymentPlan(@RequestBody PaymentPlanDTO paymentPlan) {
-        return this.paymentPlanService.createPaymentPlan(paymentPlan);
-    }
-
-    @PutMapping("/{id}")
-    public PaymentPlanDTO updatePaymentPlan(@RequestBody PaymentPlanDTO paymentPlan, @PathVariable long id) {
-        return this.paymentPlanService.updatePaymentPlan(paymentPlan, id);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deletePaymentPlan(@PathVariable long id) {
-        this.paymentPlanService.deletePaymentPlan(id);
+    @GetMapping("/{loanId}")
+    public Set<PaymentPlanDTO> getPaymentPlan(@PathVariable long loanId) {
+        return this.paymentPlanService.getPaymentPlanFromLoan(loanId);
     }
 }
