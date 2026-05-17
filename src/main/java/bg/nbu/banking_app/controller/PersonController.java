@@ -30,7 +30,7 @@ public class PersonController {
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE')")
     public PersonDTO createPerson(@RequestBody PersonDTO person) {
-        return this.personService.createPerson(person);
+        return this.personService.createPerson(person); //TODO: Check passing ID inside the RequestBody. Maybe the Backend will need to add it and not to be sned from FE
     }
 
     @PutMapping("/{id}")
@@ -42,6 +42,6 @@ public class PersonController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public void deletePerson(@PathVariable long id) {
-        this.personService.deletePerson(id);
+        this.personService.deletePerson(id); //TODO: Check FK for Customer when deleting it. It needs to be removed as well. Add check if ID exists before deleting it.
     }
 }

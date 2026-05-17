@@ -30,7 +30,7 @@ public class CompanyController {
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE')")
     public CompanyDTO createCompany(@RequestBody CompanyDTO company) {
-        return this.companyService.createCompany(company);
+        return this.companyService.createCompany(company); //TODO: Check passing ID inside the RequestBody. Maybe the Backend will need to add it and not to be sned from FE
     }
 
     @PutMapping("/{id}")

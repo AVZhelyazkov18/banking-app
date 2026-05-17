@@ -43,4 +43,6 @@ public class LoanTypeController {
     public void deleteLoanType(@PathVariable long id) {
         this.loanTypeService.deleteLoanType(id);
     }
+
+    //TODO: Creade, Update, Delete work for new LoanTypes. Check the pre-created test data. It does not work there
 }

@@ -59,6 +59,6 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public void deleteCompany(long id) {
-        this.companyRepository.deleteById(id);
+        this.companyRepository.deleteById(id); //TODO: Check FK for Customer when deleting it. It needs to be removed as well. Add check if ID exists before deleting it.
     }
 }

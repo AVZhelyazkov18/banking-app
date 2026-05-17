@@ -29,7 +29,7 @@ public class PaymentPlanController {
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE')")
     public PaymentPlanDTO createPaymentPlan(@RequestBody PaymentPlanDTO paymentPlan) {
-        return this.paymentPlanService.createPaymentPlan(paymentPlan);
+        return this.paymentPlanService.createPaymentPlan(paymentPlan); //TODO: Check passing ID inside the RequestBody. Maybe the Backend will need to add it and not to be sned from FE
     }
 
     @PutMapping("/{id}")

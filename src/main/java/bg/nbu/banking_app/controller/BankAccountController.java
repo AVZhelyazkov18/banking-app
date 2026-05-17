@@ -38,4 +38,7 @@ public class BankAccountController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public void deleteBankAccount(@PathVariable long id) {this.bankAccountService.deleteBankAccount(id);}
+
+    //TODO: Add functionality to create a bankAccount by the user and Authorised by Employee and the Admin.
+    // Default, when the User creates bankAccount to be Inactive.
 }
