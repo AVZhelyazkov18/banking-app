@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @ToString
 public class BankAccountDTO {
-    private Long id;
+    //private Long id; That is likely not needed here.
     private String IBAN;
     private BigDecimal balance;
     private boolean status;
