@@ -9,7 +9,6 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class CompanyDTO {
-    private long id;
     private String companyName;
     private String eik;
     private String representative;
