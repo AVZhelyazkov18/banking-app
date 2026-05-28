@@ -135,4 +135,32 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
     public void deletePaymentPlan(long id) {
         this.paymentPlanRepository.deleteById(id);
     }
+
+    @Override
+    public PaymentPlanDTO markInstallmentAsPaid(long id) {
+        return markInstallmentAsPaid(id, LocalDate.now());
+    }
+
+    @Override
+    public PaymentPlanDTO markInstallmentAsPaid(long id, LocalDate paidDate) {
+        if (paidDate == null) {
+            throw new IllegalArgumentException("Payment date is required");
+        }
+
+        PaymentPlan paymentPlan = this.paymentPlanRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("PaymentPlan with id " + id + " not found"));
+
+        if (paymentPlan.isPaid()) {
+            throw new IllegalStateException("PaymentPlan with id " + id + " is already paid");
+        }
+
+        paymentPlan.setPaid(true);
+        paymentPlan.setPaidDate(paidDate);
+
+        PaymentPlan updated = this.paymentPlanRepository.save(paymentPlan);
+
+        return this.mapperUtil
+                .getModelMapper()
+                .map(updated, PaymentPlanDTO.class);
+    }
 }

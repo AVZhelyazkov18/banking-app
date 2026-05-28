@@ -17,4 +17,25 @@ public class PaymentPlanDTO {
     private BigDecimal principalPortion;
     private BigDecimal interestPortion;
     private LocalDate date;
+    private boolean paid;
+    private LocalDate paidDate;
+
+    // This constructor is used when paid and paidDate are not provided when defining DTO
+    public PaymentPlanDTO(
+            Long id,
+            BigDecimal contributionAmount,
+            BigDecimal principalPortion,
+            BigDecimal interestPortion,
+            LocalDate date
+    ) {
+        this.id = id;
+        this.contributionAmount = contributionAmount;
+        this.principalPortion = principalPortion;
+        this.interestPortion = interestPortion;
+        this.date = date;
+        this.paid = false;
+        this.paidDate = null;
+    }
+
 }
+

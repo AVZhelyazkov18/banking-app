@@ -43,4 +43,10 @@ public class PaymentPlanController {
     public void deletePaymentPlan(@PathVariable long id) {
         this.paymentPlanService.deletePaymentPlan(id);
     }
+
+    @PatchMapping("/{id}/pay")
+    @PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE')")
+    public PaymentPlanDTO markInstallmentAsPaid(@PathVariable long id) {
+        return this.paymentPlanService.markInstallmentAsPaid(id);
+    }
 }

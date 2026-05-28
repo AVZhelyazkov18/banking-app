@@ -17,8 +17,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.within;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class PaymentPlanServiceImplTest {
@@ -121,5 +120,59 @@ class PaymentPlanServiceImplTest {
         assertThatThrownBy(() -> service.getPaymentPlan(99L))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessageContaining("PaymentPlan with id 99 not found");
+    }
+
+    @Test
+    void markInstallmentAsPaidSetsPaidFieldsAndSavesInstallment() {
+        PaymentPlan existing = new PaymentPlan();
+        existing.setContributionAmount(new BigDecimal("150.00"));
+        existing.setPrincipalPortion(new BigDecimal("100.00"));
+        existing.setInterestPortion(new BigDecimal("50.00"));
+        existing.setDate(LocalDate.of(2026, 6, 1));
+        existing.setPaid(false);
+
+        LocalDate paidDate = LocalDate.of(2026, 6, 2);
+
+        when(paymentPlanRepository.findById(1L)).thenReturn(Optional.of(existing));
+        when(paymentPlanRepository.save(existing)).thenReturn(existing);
+
+        PaymentPlanServiceImpl service = new PaymentPlanServiceImpl(paymentPlanRepository, mapperUtil);
+
+        PaymentPlanDTO result = service.markInstallmentAsPaid(1L, paidDate);
+
+        assertThat(result.isPaid()).isTrue();
+        assertThat(result.getPaidDate()).isEqualTo(paidDate);
+        assertThat(existing.isPaid()).isTrue();
+        assertThat(existing.getPaidDate()).isEqualTo(paidDate);
+        verify(paymentPlanRepository).save(existing);
+    }
+
+    @Test
+    void markInstallmentAsPaidThrowsWhenPaymentPlanDoesNotExist() {
+        when(paymentPlanRepository.findById(99L)).thenReturn(Optional.empty());
+
+        PaymentPlanServiceImpl service = new PaymentPlanServiceImpl(paymentPlanRepository, mapperUtil);
+
+        assertThatThrownBy(() -> service.markInstallmentAsPaid(99L, LocalDate.of(2026, 6, 2)))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessageContaining("PaymentPlan with id 99 not found");
+    }
+
+    @Test
+    void markInstallmentAsPaidThrowsWhenPaymentPlanIsAlreadyPaid() {
+        PaymentPlan existing = new PaymentPlan();
+        existing.setPaid(true);
+        existing.setPaidDate(LocalDate.of(2026, 6, 2));
+
+        when(paymentPlanRepository.findById(1L)).thenReturn(Optional.of(existing));
+
+        PaymentPlanServiceImpl service = new PaymentPlanServiceImpl(paymentPlanRepository, mapperUtil);
+
+        assertThatThrownBy(() -> service.markInstallmentAsPaid(1L, LocalDate.of(2026, 6, 3)))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("PaymentPlan with id 1 is already paid");
+
+        assertThat(existing.getPaidDate()).isEqualTo(LocalDate.of(2026, 6, 2));
+
     }
 }

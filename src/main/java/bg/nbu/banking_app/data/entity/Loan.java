@@ -23,7 +23,6 @@ public class Loan extends BaseEntity {
     @ManyToOne
     private Customer customer;
 
-    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
-    @JoinColumn(name = "id")
+    @OneToMany(mappedBy = "loan", orphanRemoval = true, cascade = CascadeType.ALL)
     private Set<PaymentPlan> paymentPlans;
 }

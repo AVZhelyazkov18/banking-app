@@ -10,7 +10,16 @@ public interface PaymentPlanService {
     List<PaymentPlanDTO> getPaymentPlans();
     PaymentPlanDTO getPaymentPlan(long id);
     PaymentPlanDTO createPaymentPlan(PaymentPlanDTO paymentPlan);
-    List<PaymentPlanDTO> generateAnnuityPaymentPlan(BigDecimal amountDisbursed, double annualInterestRatePercent, int paymentTermMonths, LocalDate firstPaymentDate);
     PaymentPlanDTO updatePaymentPlan(PaymentPlanDTO paymentPlan, long id);
     void deletePaymentPlan(long id);
+
+    List<PaymentPlanDTO> generateAnnuityPaymentPlan(
+            BigDecimal amountDisbursed,
+            double annualInterestRatePercent,
+            int paymentTermMonths,
+            LocalDate firstPaymentDate
+    );
+
+    PaymentPlanDTO markInstallmentAsPaid(long id);
+    PaymentPlanDTO markInstallmentAsPaid(long id, LocalDate paidDate);
 }
