@@ -4,4 +4,6 @@ export interface PaymentPlanDTO {
   principalPortion: number;
   interestPortion: number;
   date: string;
+  paid?: boolean;
+  paidDate?: string | null;
 }

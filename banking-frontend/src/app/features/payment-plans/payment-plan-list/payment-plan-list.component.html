@@ -17,6 +17,8 @@
         <th>Principal Portion</th>
         <th>Interest Portion</th>
         <th>Actions</th>
+        <th>Status</th>
+        <th>Paid Date</th>
       </tr>
     </thead>
     <tbody>
@@ -33,7 +35,20 @@
           <button class="btn btn-outline-danger btn-sm" (click)="delete(plan.id ?? 0)" title="Delete">
             <i class="bi bi-trash"></i>
           </button>
+          <button
+            class="btn btn-outline-success btn-sm me-1"
+            (click)="markAsPaid(plan.id ?? 0)"
+            [disabled]="plan.paid"
+            title="Mark as paid">
+            <i class="bi bi-check2-circle"></i>
+          </button>
         </td>
+        <td>
+          <span class="badge" [ngClass]="plan.paid ? 'bg-success' : 'bg-warning text-dark'">
+            {{ plan.paid ? 'Paid' : 'Unpaid' }}
+          </span>
+        </td>
+        <td>{{ plan.paidDate || '-' }}</td>
       </tr>
       <tr *ngIf="paymentPlans.length === 0">
         <td colspan="6" class="text-center text-muted py-4">

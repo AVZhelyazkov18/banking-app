@@ -28,4 +28,8 @@ export class PaymentPlansService {
   deletePaymentPlan(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+
+  markInstallmentAsPaid(id: number): Observable<PaymentPlanDTO> {
+    return this.http.patch<PaymentPlanDTO>(`${this.apiUrl}/${id}/pay`, {});
+  }
 }
