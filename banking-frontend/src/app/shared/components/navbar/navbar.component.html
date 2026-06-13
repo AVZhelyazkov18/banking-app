@@ -1,0 +1,79 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand" routerLink="/">
+      <i class="bi bi-bank2 me-2"></i>Banking<span>App</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+      data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="mainNav">
+      <div class="navbar-nav ms-auto d-flex flex-lg-row flex-column align-items-lg-center gap-1 py-2 py-lg-0">
+        <ng-container *ngIf="authService.isLoggedIn(); else loggedOut">
+          <!-- All authenticated users -->
+          <a class="nav-link text-white nav-icon-link" routerLink="/home" routerLinkActive="active" title="Home">
+            <i class="bi bi-house fs-5"></i>
+            <span class="nav-label">Home</span>
+          </a>
+          <a class="nav-link text-white nav-icon-link" routerLink="/profile" routerLinkActive="active" title="My Profile">
+            <i class="bi bi-person-circle fs-5"></i>
+            <span class="nav-label">Profile</span>
+          </a>
+
+          <!-- Employee + Admin -->
+          <ng-container *ngIf="authService.getRole() === 'ROLE_EMPLOYEE' || authService.getRole() === 'ROLE_ADMIN'">
+            <a class="nav-link text-white nav-icon-link" routerLink="/people" routerLinkActive="active" title="People">
+              <i class="bi bi-people fs-5"></i>
+              <span class="nav-label">People</span>
+            </a>
+            <a class="nav-link text-white nav-icon-link" routerLink="/companies" routerLinkActive="active" title="Companies">
+              <i class="bi bi-building fs-5"></i>
+              <span class="nav-label">Companies</span>
+            </a>
+            <a class="nav-link text-white nav-icon-link" routerLink="/bank-accounts" routerLinkActive="active" title="Bank Accounts">
+              <i class="bi bi-bank fs-5"></i>
+              <span class="nav-label">Bank Accounts</span>
+            </a>
+            <a class="nav-link text-white nav-icon-link" routerLink="/loan-types" routerLinkActive="active" title="Loan Types">
+              <i class="bi bi-tags fs-5"></i>
+              <span class="nav-label">Loan Types</span>
+            </a>
+            <a class="nav-link text-white nav-icon-link" routerLink="/loans" routerLinkActive="active" title="Loans">
+              <i class="bi bi-credit-card fs-5"></i>
+              <span class="nav-label">Loans</span>
+            </a>
+            <a class="nav-link text-white nav-icon-link" routerLink="/payment-plans" routerLinkActive="active" title="Payment Plans">
+              <i class="bi bi-calendar-check fs-5"></i>
+              <span class="nav-label">Payment Plans</span>
+            </a>
+          </ng-container>
+
+          <!-- Admin only -->
+          <ng-container *ngIf="authService.getRole() === 'ROLE_ADMIN'">
+            <a class="nav-link text-white nav-icon-link" routerLink="/users" routerLinkActive="active" title="Users">
+              <i class="bi bi-shield-person fs-5"></i>
+              <span class="nav-label">Users</span>
+            </a>
+          </ng-container>
+
+          <div class="vr bg-white opacity-25 mx-1 d-none d-lg-block" style="height:24px;"></div>
+          <span class="text-white-50 small d-none d-lg-block">{{ authService.getEmail() }}</span>
+          <button class="btn btn-outline-light btn-sm" (click)="logout()" title="Logout">
+            <i class="bi bi-box-arrow-right"></i>
+            <span class="d-lg-none ms-1">Logout</span>
+          </button>
+        </ng-container>
+        <ng-template #loggedOut>
+          <a class="nav-link text-white nav-icon-link" routerLink="/login" routerLinkActive="active" title="Login">
+            <i class="bi bi-box-arrow-in-right fs-5"></i>
+            <span class="nav-label">Login</span>
+          </a>
+          <a class="nav-link text-white nav-icon-link" routerLink="/register" routerLinkActive="active" title="Register">
+            <i class="bi bi-person-plus fs-5"></i>
+            <span class="nav-label">Register</span>
+          </a>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</nav>

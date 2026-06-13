@@ -1,13 +1,11 @@
 package bg.nbu.banking_app.service.impl;
 
 import bg.nbu.banking_app.data.dto.Loans.PaymentPlans.PaymentPlanDTO;
-import bg.nbu.banking_app.data.entity.Loan;
 import bg.nbu.banking_app.data.entity.PaymentPlan;
 import bg.nbu.banking_app.data.repository.LoanRepository;
 import bg.nbu.banking_app.data.repository.PaymentPlanRepository;
 import bg.nbu.banking_app.service.PaymentPlanService;
 import bg.nbu.banking_app.util.MapperUtil;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,56 +18,150 @@ import java.util.*;
 @RequiredArgsConstructor
 public class PaymentPlanServiceImpl implements PaymentPlanService {
     private final PaymentPlanRepository paymentPlanRepository;
-    private final LoanRepository loanRepository;
+    private final MapperUtil mapperUtil;
 
-    private void generatePaymentPlanFromLoan(long loanId) {
-        Loan loan = loanRepository.findById(loanId).orElseThrow(() -> new RuntimeException("Loan not found"));
-
-        if(!loan.getPaymentPlans().isEmpty())
-            return;
-
-        BigDecimal loanAmount = loan.getAmountDisbursed();
-        BigDecimal monthlyInterestRate = BigDecimal.valueOf(loan.getLoanType().getCreditInterestRate());
-        int months = loan.getPaymentTerm();
-
-        BigDecimal monthlyPayment = loanAmount.divide(BigDecimal.valueOf(months), 2, RoundingMode.HALF_UP);
-        BigDecimal monthlyInterest = monthlyInterestRate.divide(BigDecimal.valueOf(12), 2, RoundingMode.HALF_UP)
-                .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
-
-        Set<PaymentPlan> plans = new HashSet<>();
-
-        for (int month = 1; month <= loan.getPaymentTerm(); month++) {
-            BigDecimal remainingAmount = loanAmount.subtract(monthlyPayment.multiply(BigDecimal.valueOf(month - 1)));
-            BigDecimal interest = remainingAmount.multiply(monthlyInterest).setScale(2, RoundingMode.HALF_UP);
-
-            BigDecimal contributionAmount = monthlyPayment.add(interest);
-
-            PaymentPlan plan = new PaymentPlan();
-
-            plan.setLoan(loan);
-            plan.setPrincipalPortion(monthlyPayment);
-            plan.setInterestPortion(interest);
-            plan.setContributionAmount(contributionAmount);
-            plan.setDate(LocalDate.now().plusMonths(month));
-
-            plans.add(plan);
-        }
-
-        paymentPlanRepository.saveAll(plans);
+    @Override
+    public List<PaymentPlanDTO> getPaymentPlans() {
+        return this.mapperUtil.mapList(
+                this.paymentPlanRepository.findAll(), PaymentPlanDTO.class);
     }
 
     @Override
-    @Transactional
-    public Set<PaymentPlanDTO> getPaymentPlanFromLoan(long loanId) {
-        Loan loan = loanRepository.findById(loanId).orElseThrow(() -> new RuntimeException("Loan not found"));
+    public PaymentPlanDTO getPaymentPlan(long id) {
+        PaymentPlan paymentPlan = this.paymentPlanRepository
+                .findById(id)
+                .orElseThrow(() -> new RuntimeException("PaymentPlan with id " + id + " not found"));
 
-        if (loan.getPaymentPlans().isEmpty())
-            generatePaymentPlanFromLoan(loanId);
+        return this.mapperUtil
+                .getModelMapper()
+                .map(paymentPlan, PaymentPlanDTO.class);
+    }
 
-        return new HashSet<>(loan.getPaymentPlans().stream()
-                .sorted(Comparator.comparing(PaymentPlan::getDate))
-                .map(PaymentPlanDTO::mapToDTO)
-                .toList()
-        );
+    @Override
+    public PaymentPlanDTO createPaymentPlan(PaymentPlanDTO paymentPlan) {
+        return mapperUtil.getModelMapper()
+                .map(this.paymentPlanRepository
+                        .save(mapperUtil.getModelMapper()
+                                .map(paymentPlan, PaymentPlan.class)), PaymentPlanDTO.class);
+    }
+
+
+
+    @Override
+    public List<PaymentPlanDTO> generateAnnuityPaymentPlan(
+            BigDecimal amountDisbursed,
+            double annualInterestRatePercent,
+            int paymentTermMonths,
+            LocalDate firstPaymentDate
+    ) {
+        if (amountDisbursed == null || amountDisbursed.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Loan amount must be positive");
+        }
+        if (annualInterestRatePercent < 0) {
+            throw new IllegalArgumentException("Annual interest rate cannot be negative");
+        }
+        if (paymentTermMonths <= 0) {
+            throw new IllegalArgumentException("Payment term must be positive");
+        }
+        if (firstPaymentDate == null) {
+            throw new IllegalArgumentException("First payment date is required");
+        }
+
+        BigDecimal monthlyInterestRate = BigDecimal.valueOf(annualInterestRatePercent)
+                .divide(BigDecimal.valueOf(100 * 12), 10, RoundingMode.HALF_UP);
+
+        BigDecimal monthlyPayment;
+        if (monthlyInterestRate.compareTo(BigDecimal.ZERO) == 0) {
+            monthlyPayment = amountDisbursed.divide(
+                    BigDecimal.valueOf(paymentTermMonths), 2, RoundingMode.HALF_UP);
+        } else {
+            double rate = annualInterestRatePercent / 100.0 / 12.0;
+            double annuityCoefficient = rate / (1 - Math.pow(1 + rate, -paymentTermMonths));
+            monthlyPayment = BigDecimal.valueOf(amountDisbursed.doubleValue() * annuityCoefficient)
+                    .setScale(2, RoundingMode.HALF_UP);
+        }
+
+        BigDecimal remainingPrincipal = amountDisbursed.setScale(2, RoundingMode.HALF_UP);
+        List<PaymentPlanDTO> paymentPlan = new ArrayList<>();
+
+        for (int month = 1; month <= paymentTermMonths; month++) {
+            BigDecimal interestPortion = remainingPrincipal
+                    .multiply(monthlyInterestRate)
+                    .setScale(2, RoundingMode.HALF_UP);
+            BigDecimal principalPortion = monthlyPayment
+                    .subtract(interestPortion)
+                    .setScale(2, RoundingMode.HALF_UP);
+            BigDecimal contributionAmount = monthlyPayment;
+
+            if (month == paymentTermMonths) {
+                principalPortion = remainingPrincipal;
+                contributionAmount = principalPortion.add(interestPortion).setScale(2, RoundingMode.HALF_UP);
+            }
+
+            PaymentPlanDTO monthlyInstallment = new PaymentPlanDTO(
+                    null,
+                    contributionAmount,
+                    principalPortion,
+                    interestPortion,
+                    firstPaymentDate.plusMonths(month - 1L)
+            );
+            paymentPlan.add(monthlyInstallment);
+
+            remainingPrincipal = remainingPrincipal
+                    .subtract(principalPortion)
+                    .setScale(2, RoundingMode.HALF_UP);
+        }
+
+        return paymentPlan;
+    }
+
+    @Override
+    public PaymentPlanDTO updatePaymentPlan(PaymentPlanDTO paymentPlan, long id) {
+        PaymentPlan paymentPlan1 = this.paymentPlanRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("PaymentPlan with id " + id + " not found"));
+
+        paymentPlan1.setDate(paymentPlan.getDate());
+        paymentPlan1.setInterestPortion(paymentPlan.getInterestPortion());
+        paymentPlan1.setPrincipalPortion(paymentPlan.getPrincipalPortion());
+        paymentPlan1.setContributionAmount(paymentPlan.getContributionAmount());
+
+        PaymentPlan updated = this.paymentPlanRepository.save(paymentPlan1);
+
+        return this.mapperUtil
+                .getModelMapper()
+                .map(updated, PaymentPlanDTO.class);
+    }
+
+    @Override
+    public void deletePaymentPlan(long id) {
+        this.paymentPlanRepository.deleteById(id);
+    }
+
+    @Override
+    public PaymentPlanDTO markInstallmentAsPaid(long id) {
+        return markInstallmentAsPaid(id, LocalDate.now());
+    }
+
+    @Override
+    public PaymentPlanDTO markInstallmentAsPaid(long id, LocalDate paidDate) {
+        if (paidDate == null) {
+            throw new IllegalArgumentException("Payment date is required");
+        }
+
+        PaymentPlan paymentPlan = this.paymentPlanRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("PaymentPlan with id " + id + " not found"));
+
+        if (paymentPlan.isPaid()) {
+            throw new IllegalStateException("PaymentPlan with id " + id + " is already paid");
+        }
+
+        paymentPlan.setPaid(true);
+        paymentPlan.setPaidDate(paidDate);
+
+        PaymentPlan updated = this.paymentPlanRepository.save(paymentPlan);
+
+        return this.mapperUtil
+                .getModelMapper()
+                .map(updated, PaymentPlanDTO.class);
     }
 }

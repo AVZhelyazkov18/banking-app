@@ -1,0 +1,56 @@
+<div class="row justify-content-center mt-2">
+  <div class="col-lg-5 col-md-7">
+    <div class="card">
+      <div class="card-header-accent">
+        <i class="bi bi-bank me-2"></i>Edit Bank Account
+      </div>
+      <div class="card-body p-4">
+        <div *ngIf="errorMessage" class="alert alert-danger py-2 small">{{ errorMessage }}</div>
+
+        <div class="mb-3 p-3 rounded" style="background:#edf2fb;">
+          <div class="text-muted small mb-1" style="font-size:0.78rem;letter-spacing:0.8px;text-transform:uppercase;">IBAN</div>
+          <div class="fw-semibold font-monospace">{{ iban }}</div>
+        </div>
+
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+          <div class="mb-3">
+            <label class="form-label">Balance (EUR)</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-currency-euro"></i></span>
+              <input type="number" step="0.01" class="form-control" formControlName="balance" placeholder="0.00"
+                [class.is-invalid]="form.get('balance')!.invalid && form.get('balance')!.touched">
+            </div>
+            <div class="invalid-feedback d-block" *ngIf="form.get('balance')!.invalid && form.get('balance')!.touched">
+              <span *ngIf="form.get('balance')!.errors?.['required']">Balance is required.</span>
+              <span *ngIf="form.get('balance')!.errors?.['min']">Balance must be at least 0.</span>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label">Status</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-toggle-on"></i></span>
+              <select class="form-select" formControlName="status"
+                [class.is-invalid]="form.get('status')!.invalid && form.get('status')!.touched">
+                <option [ngValue]="true">Active</option>
+                <option [ngValue]="false">Inactive</option>
+              </select>
+            </div>
+            <div class="invalid-feedback d-block" *ngIf="form.get('status')!.invalid && form.get('status')!.touched">
+              Status is required.
+            </div>
+          </div>
+
+          <div class="d-flex gap-2 mt-4">
+            <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
+              <i class="bi bi-check-lg me-1"></i>Save Changes
+            </button>
+            <button type="button" class="btn btn-outline-secondary" (click)="cancel()">
+              <i class="bi bi-x-lg me-1"></i>Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

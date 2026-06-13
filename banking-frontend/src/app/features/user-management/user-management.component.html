@@ -1,0 +1,41 @@
+<div class="page-header">
+  <h3><i class="bi bi-shield-person me-2"></i>User Management</h3>
+</div>
+
+<div *ngIf="successMessage" class="alert alert-success py-2 small mb-3">
+  <i class="bi bi-check-circle me-1"></i>{{ successMessage }}
+</div>
+<div *ngIf="errorMessage" class="alert alert-danger py-2 small mb-3">{{ errorMessage }}</div>
+
+<div class="table-wrapper">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Client No.</th>
+        <th>Full Name</th>
+        <th>Email</th>
+        <th>Current Role</th>
+        <th>Change Role</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users; let i = index">
+        <td class="text-muted small">{{ i + 1 }}</td>
+        <td class="font-monospace small">{{ user.clientNumber ?? '—' }}</td>
+        <td>{{ user.fullName ?? '—' }}</td>
+        <td>{{ user.email }}</td>
+        <td><span [class]="roleBadgeClass(user.role)">{{ user.role }}</span></td>
+        <td>
+          <select class="form-select form-select-sm" style="width:auto;display:inline-block;"
+            [value]="user.role"
+            (change)="changeRole(user, $any($event.target).value)">
+            <option value="ROLE_USER">User</option>
+            <option value="ROLE_EMPLOYEE">Employee</option>
+            <option value="ROLE_ADMIN">Admin</option>
+          </select>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

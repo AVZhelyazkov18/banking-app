@@ -10,4 +10,5 @@ public interface LoanService {
     LoanDTO createLoan(LoanDTO loan);
     LoanDTO updateLoan(LoanDTO loan, long id);
     void deleteLoan(long id);
+    List<LoanDTO> getMyLoans(String username);
 }

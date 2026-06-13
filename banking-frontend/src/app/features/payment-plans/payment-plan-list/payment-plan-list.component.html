@@ -1,0 +1,60 @@
+<div class="page-header">
+  <h3><i class="bi bi-calendar-check me-2"></i>Payment Plans</h3>
+  <button class="btn btn-primary" (click)="create()">
+    <i class="bi bi-plus-lg me-1"></i>Create
+  </button>
+</div>
+
+<div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+<div class="table-wrapper">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Date</th>
+        <th>Contribution Amount</th>
+        <th>Principal Portion</th>
+        <th>Interest Portion</th>
+        <th>Actions</th>
+        <th>Status</th>
+        <th>Paid Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let plan of paymentPlans; let i = index">
+        <td class="text-muted">{{ i + 1 }}</td>
+        <td>{{ plan.date }}</td>
+        <td class="fw-semibold">{{ plan.contributionAmount | number:'1.2-2' }}</td>
+        <td>{{ plan.principalPortion | number:'1.2-2' }}</td>
+        <td>{{ plan.interestPortion | number:'1.2-2' }}</td>
+        <td>
+          <button class="btn btn-outline-primary btn-sm me-1" (click)="edit(plan.id ?? 0)" title="Edit">
+            <i class="bi bi-pencil"></i>
+          </button>
+          <button class="btn btn-outline-danger btn-sm" (click)="delete(plan.id ?? 0)" title="Delete">
+            <i class="bi bi-trash"></i>
+          </button>
+          <button
+            class="btn btn-outline-success btn-sm me-1"
+            (click)="markAsPaid(plan.id ?? 0)"
+            [disabled]="plan.paid"
+            title="Mark as paid">
+            <i class="bi bi-check2-circle"></i>
+          </button>
+        </td>
+        <td>
+          <span class="badge" [ngClass]="plan.paid ? 'bg-success' : 'bg-warning text-dark'">
+            {{ plan.paid ? 'Paid' : 'Unpaid' }}
+          </span>
+        </td>
+        <td>{{ plan.paidDate || '-' }}</td>
+      </tr>
+      <tr *ngIf="paymentPlans.length === 0">
+        <td colspan="6" class="text-center text-muted py-4">
+          <i class="bi bi-inbox fs-4 d-block mb-1 opacity-25"></i>No payment plans found.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

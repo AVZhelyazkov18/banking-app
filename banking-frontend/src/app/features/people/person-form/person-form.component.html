@@ -1,0 +1,62 @@
+<div class="row justify-content-center mt-2">
+  <div class="col-lg-5 col-md-7">
+    <div class="card">
+      <div class="card-header-accent">
+        <i class="bi bi-person me-2"></i>{{ isEditMode ? 'Edit Person' : 'Create Person' }}
+      </div>
+      <div class="card-body p-4">
+        <div *ngIf="errorMessage" class="alert alert-danger py-2 small">{{ errorMessage }}</div>
+
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+          <div class="mb-3">
+            <label class="form-label">First Name</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-person"></i></span>
+              <input type="text" class="form-control" formControlName="firstName" placeholder="First name"
+                [class.is-invalid]="form.get('firstName')!.invalid && form.get('firstName')!.touched">
+            </div>
+            <div class="invalid-feedback d-block" *ngIf="form.get('firstName')!.invalid && form.get('firstName')!.touched">
+              <span *ngIf="form.get('firstName')!.errors?.['required']">First name is required.</span>
+              <span *ngIf="form.get('firstName')!.errors?.['minlength']">Minimum 2 characters.</span>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Last Name</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-person"></i></span>
+              <input type="text" class="form-control" formControlName="lastName" placeholder="Last name"
+                [class.is-invalid]="form.get('lastName')!.invalid && form.get('lastName')!.touched">
+            </div>
+            <div class="invalid-feedback d-block" *ngIf="form.get('lastName')!.invalid && form.get('lastName')!.touched">
+              <span *ngIf="form.get('lastName')!.errors?.['required']">Last name is required.</span>
+              <span *ngIf="form.get('lastName')!.errors?.['minlength']">Minimum 2 characters.</span>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label">PIN (10 digits)</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-shield-lock"></i></span>
+              <input type="text" class="form-control font-monospace" formControlName="pin" placeholder="0000000000"
+                [class.is-invalid]="form.get('pin')!.invalid && form.get('pin')!.touched">
+            </div>
+            <div class="invalid-feedback d-block" *ngIf="form.get('pin')!.invalid && form.get('pin')!.touched">
+              <span *ngIf="form.get('pin')!.errors?.['required']">PIN is required.</span>
+              <span *ngIf="form.get('pin')!.errors?.['pattern']">PIN must be exactly 10 digits.</span>
+            </div>
+          </div>
+
+          <div class="d-flex gap-2 mt-4">
+            <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
+              <i class="bi bi-check-lg me-1"></i>{{ isEditMode ? 'Save Changes' : 'Create' }}
+            </button>
+            <button type="button" class="btn btn-outline-secondary" (click)="cancel()">
+              <i class="bi bi-x-lg me-1"></i>Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

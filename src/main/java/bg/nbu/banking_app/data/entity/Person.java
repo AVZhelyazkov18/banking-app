@@ -15,6 +15,15 @@ public class Person extends Customer {
     @Column(name = "last_name")
     private String lastName;
 
+    @Setter
     @Column(name = "pin")
     private String pin;
+
+    @Setter
+    @Column(name = "phone")
+    private String phone;
+
+    @Setter
+    @Column(name = "address")
+    private String address;
 }
