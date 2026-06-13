@@ -50,4 +50,10 @@ public class PaymentPlanController {
     public PaymentPlanDTO markInstallmentAsPaid(@PathVariable long id) {
         return this.paymentPlanService.markInstallmentAsPaid(id);
     }
+
+    @GetMapping("/{id}/detail")
+    @PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE')") // check permissions later if user has to access this
+    public List<PaymentPlanDTO> getPaymentPlanFromLoan(@PathVariable long id) {
+        return this.paymentPlanService.getPaymentPlanFromLoan(id);
+    }
 }

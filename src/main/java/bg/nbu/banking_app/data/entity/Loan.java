@@ -26,5 +26,5 @@ public class Loan extends BaseEntity {
     private Customer customer;
 
     @OneToMany(mappedBy = "loan", orphanRemoval = true, cascade = CascadeType.ALL)
-    private Set<PaymentPlan> paymentPlans;
+    private List<PaymentPlan> paymentPlans;
 }

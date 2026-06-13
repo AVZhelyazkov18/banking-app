@@ -13,6 +13,8 @@ public interface PaymentPlanService {
     PaymentPlanDTO updatePaymentPlan(PaymentPlanDTO paymentPlan, long id);
     void deletePaymentPlan(long id);
 
+    List<PaymentPlanDTO> getPaymentPlanFromLoan(long loanId);
+
     List<PaymentPlanDTO> generateAnnuityPaymentPlan(
             BigDecimal amountDisbursed,
             double annualInterestRatePercent,
