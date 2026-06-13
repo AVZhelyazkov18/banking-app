@@ -1,5 +1,8 @@
 package bg.nbu.banking_app.data.dto.Loans.PaymentPlans;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -13,8 +16,17 @@ import java.time.LocalDate;
 @ToString
 public class PaymentPlanDTO {
     private Long id;
+
+    @NotNull(message = "Contribution amount is required")
+    @PositiveOrZero(message = "contributionAmount must be greater than 0")
     private BigDecimal contributionAmount;
+
+    @NotNull(message = "principalPortion amount is required")
+    @PositiveOrZero(message = "principalPortion must be greater than 0")
     private BigDecimal principalPortion;
+
+    @NotNull(message = "interestPortion amount is required")
+    @PositiveOrZero(message = "interestPortion must be greater than 0")
     private BigDecimal interestPortion;
     private LocalDate date;
     private boolean paid;

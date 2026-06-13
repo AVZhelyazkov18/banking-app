@@ -2,6 +2,7 @@ package bg.nbu.banking_app.controller;
 
 import bg.nbu.banking_app.data.dto.Loans.PaymentPlans.PaymentPlanDTO;
 import bg.nbu.banking_app.service.PaymentPlanService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -28,13 +29,13 @@ public class PaymentPlanController {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE')")
-    public PaymentPlanDTO createPaymentPlan(@RequestBody PaymentPlanDTO paymentPlan) {
+    public PaymentPlanDTO createPaymentPlan(@Valid @RequestBody PaymentPlanDTO paymentPlan) {
         return this.paymentPlanService.createPaymentPlan(paymentPlan); //TODO: Check passing ID inside the RequestBody. Maybe the Backend will need to add it and not to be sned from FE
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE')")
-    public PaymentPlanDTO updatePaymentPlan(@RequestBody PaymentPlanDTO paymentPlan, @PathVariable long id) {
+    public PaymentPlanDTO updatePaymentPlan(@Valid @RequestBody PaymentPlanDTO paymentPlan, @PathVariable long id) {
         return this.paymentPlanService.updatePaymentPlan(paymentPlan, id);
     }
 
