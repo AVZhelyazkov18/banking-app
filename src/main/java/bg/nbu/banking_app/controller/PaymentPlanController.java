@@ -15,13 +15,13 @@ public class PaymentPlanController {
     private final PaymentPlanService paymentPlanService;
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE')")
+    @PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE','USER')")
     public List<PaymentPlanDTO> getPaymentPlans() {
         return paymentPlanService.getPaymentPlans();
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE')")
+    @PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE','USER')")
     public PaymentPlanDTO getPaymentPlan(@PathVariable long id) {
         return this.paymentPlanService.getPaymentPlan(id);
     }
