@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -23,7 +25,6 @@ public class Loan extends BaseEntity {
     @ManyToOne
     private Customer customer;
 
-    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
-    @JoinColumn(name = "id")
-    private Set<PaymentPlan> paymentPlans;
+    @OneToMany(mappedBy = "loan", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<PaymentPlan> paymentPlans;
 }

@@ -2,6 +2,7 @@ package bg.nbu.banking_app.controller;
 
 import bg.nbu.banking_app.data.dto.Loans.LoanTypes.LoanTypeDTO;
 import bg.nbu.banking_app.service.LoanTypeService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -28,13 +29,13 @@ public class LoanTypeController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public LoanTypeDTO createLoanType(@RequestBody LoanTypeDTO loanType) {
+    public LoanTypeDTO createLoanType(@Valid @RequestBody LoanTypeDTO loanType) {
         return this.loanTypeService.createLoanType(loanType);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public LoanTypeDTO updateLoanType(@RequestBody LoanTypeDTO loanType, @PathVariable long id) {
+    public LoanTypeDTO updateLoanType(@Valid @RequestBody LoanTypeDTO loanType, @PathVariable long id) {
         return this.loanTypeService.updateLoanType(loanType, id);
     }
 

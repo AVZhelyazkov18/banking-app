@@ -38,4 +38,11 @@ export class PaymentPlanListComponent implements OnInit {
       error: err => this.errorMessage = err.error?.message || 'Delete failed'
     });
   }
+
+  markAsPaid(id: number): void {
+    this.paymentPlansService.markInstallmentAsPaid(id).subscribe({
+      next: () => this.loadPaymentPlans(),
+      error: err => this.errorMessage = err.error?.message || 'Payment failed'
+    });
+  }
 }

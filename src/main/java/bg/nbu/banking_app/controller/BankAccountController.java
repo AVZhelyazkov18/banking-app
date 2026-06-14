@@ -3,6 +3,7 @@ package bg.nbu.banking_app.controller;
 import bg.nbu.banking_app.data.dto.BankAccount.BankAccountDTO;
 import bg.nbu.banking_app.data.dto.BankAccount.UpdateBankAccountDTO;
 import bg.nbu.banking_app.service.BankAccountService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -31,7 +32,7 @@ public class BankAccountController {
 
     @PostMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE')")
-    public BankAccountDTO updateBankAccount(@RequestBody UpdateBankAccountDTO bankAccount, @PathVariable long id) {
+    public BankAccountDTO updateBankAccount(@Valid @RequestBody UpdateBankAccountDTO bankAccount, @PathVariable long id) {
         return this.bankAccountService.updateBankAccount(bankAccount, id);
     }
 

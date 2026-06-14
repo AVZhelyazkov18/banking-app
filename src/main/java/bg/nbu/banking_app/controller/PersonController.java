@@ -3,6 +3,7 @@ package bg.nbu.banking_app.controller;
 import bg.nbu.banking_app.data.dto.Customers.NaturalPerson.PersonDTO;
 import bg.nbu.banking_app.data.dto.Customers.NaturalPerson.UpdatePersonDTO;
 import bg.nbu.banking_app.service.PersonService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -29,13 +30,13 @@ public class PersonController {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE')")
-    public PersonDTO createPerson(@RequestBody PersonDTO person) {
+    public PersonDTO createPerson(@Valid @RequestBody PersonDTO person) {
         return this.personService.createPerson(person); //TODO: Check passing ID inside the RequestBody. Maybe the Backend will need to add it and not to be sned from FE
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE')")
-    public PersonDTO updatePerson(@RequestBody UpdatePersonDTO person, @PathVariable long id) {
+    public PersonDTO updatePerson(@Valid @RequestBody UpdatePersonDTO person, @PathVariable long id) {
         return this.personService.updatePerson(person, id);
     }
 
