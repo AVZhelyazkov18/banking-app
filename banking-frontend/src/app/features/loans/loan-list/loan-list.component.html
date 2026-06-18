@@ -25,6 +25,9 @@
         <td>{{ loan.paymentTerm }} months</td>
         <td><span class="badge-active">{{ loan.loanType.creditName ?? loan.loanType.id }}</span></td>
         <td>
+          <button class="btn btn-outline-secondary btn-sm me-1" (click)="viewPaymentPlans(loan.id)" title="View Payment Plans">
+            <i class="bi bi-list-check"></i>
+          </button>
           <button class="btn btn-outline-primary btn-sm me-1" (click)="edit(loan.id)" title="Edit">
             <i class="bi bi-pencil"></i>
           </button>

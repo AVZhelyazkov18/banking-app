@@ -38,4 +38,8 @@ export class LoanListComponent implements OnInit {
       error: err => this.errorMessage = err.error?.message || 'Delete failed'
     });
   }
+
+  viewPaymentPlans(id: number): void {
+    this.router.navigate(['/loans', id, 'payment-plans']);
+  }
 }

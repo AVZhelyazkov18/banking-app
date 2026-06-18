@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { BankAccountDTO, UpdateBankAccountDTO } from '../../models/bank-account.model';
+import { BankAccountDTO, CreateBankAccountDTO, UpdateBankAccountDTO } from '../../models/bank-account.model';
 
 @Injectable({ providedIn: 'root' })
 export class BankAccountsService {
@@ -17,8 +17,12 @@ export class BankAccountsService {
     return this.http.get<BankAccountDTO>(`${this.apiUrl}/${id}`);
   }
 
+  createBankAccount(dto: CreateBankAccountDTO): Observable<BankAccountDTO> {
+    return this.http.post<BankAccountDTO>(this.apiUrl, dto);
+  }
+
   updateBankAccount(id: number, dto: UpdateBankAccountDTO): Observable<BankAccountDTO> {
-    return this.http.post<BankAccountDTO>(`${this.apiUrl}/${id}`, dto);
+    return this.http.put<BankAccountDTO>(`${this.apiUrl}/${id}`, dto);
   }
 
   deleteBankAccount(id: number): Observable<void> {

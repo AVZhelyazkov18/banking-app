@@ -22,9 +22,12 @@ import { LoanListComponent } from './features/loans/loan-list/loan-list.componen
 import { LoanFormComponent } from './features/loans/loan-form/loan-form.component';
 import { PaymentPlanListComponent } from './features/payment-plans/payment-plan-list/payment-plan-list.component';
 import { PaymentPlanFormComponent } from './features/payment-plans/payment-plan-form/payment-plan-form.component';
+import { PaymentPlanDetailComponent } from './features/payment-plans/payment-plan-detail/payment-plan-detail.component';
 import { HomeComponent } from './features/home/home.component';
 import { ProfileComponent } from './features/profile/profile.component';
 import { UserManagementComponent } from './features/user-management/user-management.component';
+import { MyLoansComponent } from './features/my-loans/my-loans.component';
+import { MyAccountsComponent } from './features/my-accounts/my-accounts.component';
 
 @NgModule({
   declarations: [
@@ -45,8 +48,11 @@ import { UserManagementComponent } from './features/user-management/user-managem
     LoanFormComponent,
     PaymentPlanListComponent,
     PaymentPlanFormComponent,
+    PaymentPlanDetailComponent,
     ProfileComponent,
-    UserManagementComponent
+    UserManagementComponent,
+    MyLoansComponent,
+    MyAccountsComponent
   ],
   imports: [
     BrowserModule,

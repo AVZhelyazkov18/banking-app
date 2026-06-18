@@ -24,6 +24,10 @@ export class BankAccountListComponent implements OnInit {
     });
   }
 
+  create(): void {
+    this.router.navigate(['/bank-accounts/new']);
+  }
+
   edit(id: number): void {
     this.router.navigate(['/bank-accounts', id, 'edit']);
   }
