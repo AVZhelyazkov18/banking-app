@@ -1,0 +1,73 @@
+<div class="page-header">
+  <h3><i class="bi bi-calendar-check me-2"></i>Annuity Payment Plan — Loan #{{ loanId }}</h3>
+  <button class="btn btn-outline-secondary" (click)="back()">
+    <i class="bi bi-arrow-left me-1"></i>Back to Loans
+  </button>
+</div>
+
+<div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+<div *ngIf="!generated" class="text-center py-5">
+  <i class="bi bi-calendar2-week fs-1 d-block mb-3 opacity-25"></i>
+  <p class="text-muted mb-4">Click the button below to generate the annuity repayment schedule for this loan.</p>
+  <button class="btn btn-primary px-4" (click)="generate()" [disabled]="loading">
+    <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status"></span>
+    <i *ngIf="!loading" class="bi bi-lightning-charge me-2"></i>
+    {{ loading ? 'Generating...' : 'Generate Payment Plan' }}
+  </button>
+</div>
+
+<div *ngIf="generated">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <span class="text-muted small">{{ paymentPlans.length }} installments</span>
+    <button class="btn btn-outline-primary btn-sm" (click)="generate()" [disabled]="loading">
+      <i class="bi bi-arrow-clockwise me-1"></i>Refresh
+    </button>
+  </div>
+
+  <div class="table-wrapper">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Due Date</th>
+          <th>Installment (EUR)</th>
+          <th>Principal</th>
+          <th>Interest</th>
+          <th>Status</th>
+          <th>Paid Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let plan of paymentPlans; let i = index">
+          <td class="text-muted">{{ i + 1 }}</td>
+          <td>{{ plan.date }}</td>
+          <td class="fw-semibold">{{ plan.contributionAmount | number:'1.2-2' }}</td>
+          <td>{{ plan.principalPortion | number:'1.2-2' }}</td>
+          <td>{{ plan.interestPortion | number:'1.2-2' }}</td>
+          <td>
+            <span class="badge" [ngClass]="plan.paid ? 'bg-success' : 'bg-warning text-dark'">
+              {{ plan.paid ? 'Paid' : 'Unpaid' }}
+            </span>
+          </td>
+          <td>{{ plan.paidDate || '-' }}</td>
+          <td>
+            <button
+              class="btn btn-outline-success btn-sm"
+              (click)="markAsPaid(plan.id ?? 0)"
+              [disabled]="plan.paid"
+              title="Mark as paid">
+              <i class="bi bi-check2-circle"></i>
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="paymentPlans.length === 0">
+          <td colspan="8" class="text-center text-muted py-4">
+            <i class="bi bi-inbox fs-4 d-block mb-1 opacity-25"></i>No installments found for this loan.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

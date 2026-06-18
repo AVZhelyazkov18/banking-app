@@ -1,6 +1,7 @@
 package bg.nbu.banking_app.controller;
 
 import bg.nbu.banking_app.data.dto.BankAccount.BankAccountDTO;
+import bg.nbu.banking_app.data.dto.BankAccount.CreateBankAccountDTO;
 import bg.nbu.banking_app.data.dto.BankAccount.UpdateBankAccountDTO;
 import bg.nbu.banking_app.service.BankAccountService;
 import jakarta.validation.Valid;
@@ -30,7 +31,7 @@ public class BankAccountController {
     @PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE')")
     public BankAccountDTO getBankAccount(@PathVariable long id) { return  this.bankAccountService.getBankAccount(id);}
 
-    @PostMapping("/{id}")
+    @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE')")
     public BankAccountDTO updateBankAccount(@Valid @RequestBody UpdateBankAccountDTO bankAccount, @PathVariable long id) {
         return this.bankAccountService.updateBankAccount(bankAccount, id);
@@ -40,6 +41,9 @@ public class BankAccountController {
     @PreAuthorize("hasRole('ADMIN')")
     public void deleteBankAccount(@PathVariable long id) {this.bankAccountService.deleteBankAccount(id);}
 
-    //TODO: Add functionality to create a bankAccount by the user and Authorised by Employee and the Admin.
-    // Default, when the User creates bankAccount to be Inactive.
+    @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE')")
+    public BankAccountDTO createBankAccount(@Valid @RequestBody CreateBankAccountDTO dto) {
+        return this.bankAccountService.createBankAccount(dto);
+    }
 }

@@ -9,6 +9,7 @@ import { BankAccountsService } from '../bank-accounts.service';
 })
 export class BankAccountFormComponent implements OnInit {
   form: FormGroup;
+  isEditMode = false;
   accountId: number = 0;
   iban: string = '';
   errorMessage = '';
@@ -20,6 +21,7 @@ export class BankAccountFormComponent implements OnInit {
     private router: Router
   ) {
     this.form = this.fb.group({
+      customerId: [null],
       balance: [0, [Validators.required, Validators.min(0)]],
       status: [true, Validators.required]
     });
@@ -28,6 +30,7 @@ export class BankAccountFormComponent implements OnInit {
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
+      this.isEditMode = true;
       this.accountId = +id;
       this.bankAccountsService.getBankAccount(this.accountId).subscribe({
         next: data => {
@@ -36,16 +39,27 @@ export class BankAccountFormComponent implements OnInit {
         },
         error: err => this.errorMessage = err.error?.message || 'Failed to load bank account'
       });
+    } else {
+      this.form.get('customerId')!.setValidators([Validators.required, Validators.min(1)]);
+      this.form.get('customerId')!.updateValueAndValidity();
     }
   }
 
   onSubmit(): void {
     if (this.form.invalid) return;
-    const { balance, status } = this.form.value;
-    this.bankAccountsService.updateBankAccount(this.accountId, { balance, status }).subscribe({
-      next: () => this.router.navigate(['/bank-accounts']),
-      error: err => this.errorMessage = err.error?.message || 'Update failed'
-    });
+    if (this.isEditMode) {
+      const { balance, status } = this.form.value;
+      this.bankAccountsService.updateBankAccount(this.accountId, { balance, status }).subscribe({
+        next: () => this.router.navigate(['/bank-accounts']),
+        error: err => this.errorMessage = err.error?.message || 'Update failed'
+      });
+    } else {
+      const { customerId, balance } = this.form.value;
+      this.bankAccountsService.createBankAccount({ customerId, balance }).subscribe({
+        next: () => this.router.navigate(['/bank-accounts']),
+        error: err => this.errorMessage = err.error?.message || 'Create failed'
+      });
+    }
   }
 
   cancel(): void {

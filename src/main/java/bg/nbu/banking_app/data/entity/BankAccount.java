@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 @Entity
 @Getter
 public class BankAccount extends BaseEntity {
+    @Setter
     @Column(name = "iban")
     private String iban;
 
@@ -20,6 +21,7 @@ public class BankAccount extends BaseEntity {
     @Column(name = "status")
     private boolean status;
     
+    @Setter
     @ManyToOne
     private Customer customer;
 }

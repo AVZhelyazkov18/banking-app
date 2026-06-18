@@ -1,12 +1,13 @@
 package bg.nbu.banking_app.service.impl;
 
 import bg.nbu.banking_app.data.dto.BankAccount.BankAccountDTO;
+import bg.nbu.banking_app.data.dto.BankAccount.CreateBankAccountDTO;
 import bg.nbu.banking_app.data.dto.BankAccount.UpdateBankAccountDTO;
-import bg.nbu.banking_app.data.dto.Customers.Company.CompanyDTO;
 import bg.nbu.banking_app.data.entity.BankAccount;
-import bg.nbu.banking_app.data.entity.Company;
+import bg.nbu.banking_app.data.entity.Customer;
 import bg.nbu.banking_app.data.entity.User;
 import bg.nbu.banking_app.data.repository.BankAccountRepository;
+import bg.nbu.banking_app.data.repository.CustomerRepository;
 import bg.nbu.banking_app.data.repository.UserRepository;
 import bg.nbu.banking_app.service.BankAccountService;
 import bg.nbu.banking_app.util.MapperUtil;
@@ -14,11 +15,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class BankAccountServiceImpl implements BankAccountService {
     private final BankAccountRepository bankAccountRepository;
+    private final CustomerRepository customerRepository;
     private final UserRepository userRepository;
     private final MapperUtil mapperUtil;
 
@@ -41,11 +44,20 @@ public class BankAccountServiceImpl implements BankAccountService {
     }
 
     @Override
-    public BankAccountDTO createBankAccount(BankAccountDTO bankAccount) {
+    public BankAccountDTO createBankAccount(CreateBankAccountDTO dto) {
+        Customer customer = customerRepository.findById(dto.getCustomerId())
+                .orElseThrow(() -> new RuntimeException("Customer with id " + dto.getCustomerId() + " not found"));
+
+        String iban = "BG" + UUID.randomUUID().toString().replace("-", "").substring(0, 18).toUpperCase();
+
+        BankAccount bankAccount = new BankAccount();
+        bankAccount.setIban(iban);
+        bankAccount.setBalance(dto.getBalance());
+        bankAccount.setStatus(false);
+        bankAccount.setCustomer(customer);
+
         return mapperUtil.getModelMapper()
-                .map(this.bankAccountRepository
-                        .save(mapperUtil.getModelMapper()
-                                .map(bankAccount, BankAccount.class)), BankAccountDTO.class);
+                .map(bankAccountRepository.save(bankAccount), BankAccountDTO.class);
     }
 
     @Override

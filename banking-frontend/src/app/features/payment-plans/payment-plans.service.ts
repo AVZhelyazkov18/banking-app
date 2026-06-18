@@ -32,4 +32,8 @@ export class PaymentPlansService {
   markInstallmentAsPaid(id: number): Observable<PaymentPlanDTO> {
     return this.http.patch<PaymentPlanDTO>(`${this.apiUrl}/${id}/pay`, {});
   }
+
+  getPaymentPlanFromLoan(loanId: number): Observable<PaymentPlanDTO[]> {
+    return this.http.get<PaymentPlanDTO[]>(`${this.apiUrl}/${loanId}/detail`);
+  }
 }
