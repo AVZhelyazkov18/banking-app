@@ -10,6 +10,8 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class PersonDTO {
+    private Long id;
+
     @NotBlank(message = "firstName cannot be blank")
     private String firstName;
     @NotBlank(message = "lastName cannot be blank")

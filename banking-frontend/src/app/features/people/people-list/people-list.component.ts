@@ -28,6 +28,7 @@ export class PeopleListComponent implements OnInit {
   // Edit and Delete require an id — using index as temporary key.
   // These actions will be fully functional once the backend returns id in responses.
   delete(id: number): void {
+    console.log(id)
     this.peopleService.deletePerson(id).subscribe({
       next: () => this.loadPeople(),
       error: err => this.errorMessage = err.error?.message || 'Delete failed'
@@ -35,6 +36,7 @@ export class PeopleListComponent implements OnInit {
   }
 
   edit(id: number): void {
+    console.log(id)
     this.router.navigate(['/people', id, 'edit']);
   }
 
