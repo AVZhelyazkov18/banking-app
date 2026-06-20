@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BankAccountsService } from '../bank-accounts.service';
+import { PeopleService } from '../../people/people.service';
+import { PersonDTO } from '../../../models/person.model';
 
 @Component({
   selector: 'app-bank-account-form',
@@ -9,6 +11,7 @@ import { BankAccountsService } from '../bank-accounts.service';
 })
 export class BankAccountFormComponent implements OnInit {
   form: FormGroup;
+  customers: PersonDTO[] = [];
   isEditMode = false;
   accountId: number = 0;
   iban: string = '';
@@ -17,6 +20,7 @@ export class BankAccountFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private bankAccountsService: BankAccountsService,
+    private peopleService: PeopleService,
     private route: ActivatedRoute,
     private router: Router
   ) {
@@ -28,6 +32,7 @@ export class BankAccountFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loadCustomers();
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.isEditMode = true;
@@ -64,5 +69,16 @@ export class BankAccountFormComponent implements OnInit {
 
   cancel(): void {
     this.router.navigate(['/bank-accounts']);
+  }
+
+  loadCustomers(): void {
+    this.peopleService.getPeople().subscribe({
+      next: data => {
+        this.customers = data.filter(customer => !!customer.id);
+      },
+      error: err => {
+        this.errorMessage = err.error?.message || 'Failed to load customers';
+      }
+    });
   }
 }

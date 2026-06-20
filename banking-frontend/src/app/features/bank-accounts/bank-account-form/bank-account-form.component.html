@@ -20,8 +20,17 @@
             <label class="form-label">Customer ID</label>
             <div class="input-group">
               <span class="input-group-text"><i class="bi bi-person-badge"></i></span>
-              <input type="number" class="form-control" formControlName="customerId" placeholder="Enter customer ID"
+              <select
+                class="form-select"
+                formControlName="customerId"
                 [class.is-invalid]="form.get('customerId')!.invalid && form.get('customerId')!.touched">
+
+                <option [ngValue]="null" disabled>Select customer</option>
+
+                <option *ngFor="let customer of customers" [ngValue]="customer.id">
+                  #{{ customer.id }} - {{ customer.firstName }} {{ customer.lastName }}
+                </option>
+              </select>
             </div>
             <div class="invalid-feedback d-block" *ngIf="form.get('customerId')!.invalid && form.get('customerId')!.touched">
               <span *ngIf="form.get('customerId')!.errors?.['required']">Customer ID is required.</span>
