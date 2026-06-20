@@ -1,6 +1,7 @@
 package bg.nbu.banking_app.data.dto.Loans.ClientLoans;
 
 import bg.nbu.banking_app.data.entity.LoanType;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
@@ -24,4 +25,8 @@ public class LoanDTO {
     @PositiveOrZero(message = "currentPayment must be greater than 0")
     private BigDecimal currentPayment;
     private LocalDate nextPaymentDate;
+
+    @NotNull(message = "customerId is required")
+    @Positive(message = "customerId must be greater than 0")
+    private Long customerId;
 }

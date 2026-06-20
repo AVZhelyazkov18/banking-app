@@ -8,6 +8,7 @@ export interface LoanDTO {
   amountDisbursed: number;
   paymentTerm: number;
   loanType: LoanTypeRef;
+  customerId?: number;
   currentPayment: number | null;
   nextPaymentDate: string | null;
 }
@@ -16,4 +17,5 @@ export interface CreateLoanDTO {
   amountDisbursed: number;
   paymentTerm: number;
   loanType: { id: number };
+  customerId: number;
 }

@@ -8,6 +8,31 @@
         <div *ngIf="errorMessage" class="alert alert-danger py-2 small">{{ errorMessage }}</div>
 
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+          <div class="mb-3">
+            <label class="form-label">Customer</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-person-badge"></i></span>
+
+              <select
+                class="form-select"
+                formControlName="customerId"
+                [class.is-invalid]="form.get('customerId')!.invalid && form.get('customerId')!.touched">
+
+                <option [ngValue]="null" disabled>Select customer</option>
+
+                <option *ngFor="let customer of customers" [ngValue]="customer.id">
+                  #{{ customer.id }} - {{ customer.firstName }} {{ customer.lastName }}
+                </option>
+              </select>
+            </div>
+
+            <div class="invalid-feedback d-block" *ngIf="form.get('customerId')!.invalid && form.get('customerId')!.touched">
+              <span *ngIf="form.get('customerId')!.errors?.['required']">Customer is required.</span>
+              <span *ngIf="form.get('customerId')!.errors?.['min']">Customer ID must be a positive number.</span>
+            </div>
+          </div>
+
           <div class="mb-3">
             <label class="form-label">Amount Disbursed (EUR)</label>
             <div class="input-group">

@@ -17,12 +17,19 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import bg.nbu.banking_app.data.entity.Customer;
+import bg.nbu.banking_app.data.entity.LoanType;
+import bg.nbu.banking_app.data.repository.CustomerRepository;
+import bg.nbu.banking_app.data.repository.LoanTypeRepository;
+
 @Service
 @RequiredArgsConstructor
 public class LoanServiceImpl implements LoanService {
     private final LoanRepository loanRepository;
     private final PaymentPlanRepository paymentPlanRepository;
     private final UserRepository userRepository;
+    private final CustomerRepository customerRepository;
+    private final LoanTypeRepository loanTypeRepository;
     private final MapperUtil mapperUtil;
 
     @Override
@@ -43,27 +50,65 @@ public class LoanServiceImpl implements LoanService {
     }
 
     @Override
-    public LoanDTO createLoan(LoanDTO loan) {
-        return mapperUtil.getModelMapper()
-                .map(this.loanRepository
-                        .save(mapperUtil.getModelMapper()
-                                .map(loan, Loan.class)), LoanDTO.class);
+    public LoanDTO createLoan(LoanDTO loanDTO) {
+        Customer customer = customerRepository.findById(loanDTO.getCustomerId())
+                .orElseThrow(() -> new RuntimeException("Customer with id " + loanDTO.getCustomerId() + " not found"));
+
+        Long loanTypeId = loanDTO.getLoanType() != null ? loanDTO.getLoanType().getId() : null;
+
+        if (loanTypeId == null) {
+            throw new RuntimeException("Loan type is required");
+        }
+
+        LoanType loanType = loanTypeRepository.findById(loanTypeId)
+                .orElseThrow(() -> new RuntimeException("LoanType with id " + loanTypeId + " not found"));
+
+        Loan loan = new Loan();
+        loan.setAmountDisbursed(loanDTO.getAmountDisbursed());
+        loan.setPaymentTerm(loanDTO.getPaymentTerm());
+        loan.setCustomer(customer);
+        loan.setLoanType(loanType);
+
+        Loan saved = loanRepository.save(loan);
+
+        LoanDTO result = mapperUtil.getModelMapper().map(saved, LoanDTO.class);
+        result.setCustomerId(customer.getId());
+
+        return result;
     }
 
     @Override
-    public LoanDTO updateLoan(LoanDTO loan, long id) {
-        Loan loan1 = this.loanRepository.findById(id)
+    public LoanDTO updateLoan(LoanDTO loanDTO, long id) {
+        Loan loan = this.loanRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Loan with id " + id + " not found"));
 
-        loan1.setAmountDisbursed(loan.getAmountDisbursed());
-        loan1.setPaymentTerm(loan.getPaymentTerm());
-        loan1.setLoanType(loan.getLoanType());
+        loan.setAmountDisbursed(loanDTO.getAmountDisbursed());
+        loan.setPaymentTerm(loanDTO.getPaymentTerm());
+        //|| loanDTO.getLoanType().getId() == null \/\/\/\/\/
+        if (loanDTO.getLoanType() == null ) {
+            throw new RuntimeException("Loan type is required");
+        }
 
-        Loan updated = this.loanRepository.save(loan1);
+        LoanType loanType = loanTypeRepository.findById(loanDTO.getLoanType().getId())
+                .orElseThrow(() -> new RuntimeException("LoanType with id " + loanDTO.getLoanType().getId() + " not found"));
 
-        return this.mapperUtil
-                .getModelMapper()
-                .map(updated, LoanDTO.class);
+        loan.setLoanType(loanType);
+
+        if (loanDTO.getCustomerId() != null) {
+            Customer customer = customerRepository.findById(loanDTO.getCustomerId())
+                    .orElseThrow(() -> new RuntimeException("Customer with id " + loanDTO.getCustomerId() + " not found"));
+
+            loan.setCustomer(customer);
+        }
+
+        Loan updated = this.loanRepository.save(loan);
+
+        LoanDTO result = this.mapperUtil.getModelMapper().map(updated, LoanDTO.class);
+        if (updated.getCustomer() != null) {
+            result.setCustomerId(updated.getCustomer().getId());
+        }
+
+        return result;
     }
 
     @Override
