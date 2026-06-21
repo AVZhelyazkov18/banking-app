@@ -22,6 +22,13 @@ import bg.nbu.banking_app.data.entity.LoanType;
 import bg.nbu.banking_app.data.repository.CustomerRepository;
 import bg.nbu.banking_app.data.repository.LoanTypeRepository;
 
+import bg.nbu.banking_app.data.entity.BankAccount;
+import bg.nbu.banking_app.data.entity.Customer;
+import bg.nbu.banking_app.data.repository.BankAccountRepository;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+
 @Service
 @RequiredArgsConstructor
 public class LoanServiceImpl implements LoanService {
@@ -31,6 +38,7 @@ public class LoanServiceImpl implements LoanService {
     private final CustomerRepository customerRepository;
     private final LoanTypeRepository loanTypeRepository;
     private final MapperUtil mapperUtil;
+    private final BankAccountRepository bankAccountRepository;
 
     @Override
     public List<LoanDTO> getLoans() {
@@ -120,18 +128,117 @@ public class LoanServiceImpl implements LoanService {
     public List<LoanDTO> getMyLoans(String username) {
         User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new RuntimeException("User not found: " + username));
-        if (user.getCustomer() == null) return List.of();
+
+        if (user.getCustomer() == null) {
+            return List.of();
+        }
+
         List<Loan> loans = loanRepository.findByCustomerId(user.getCustomer().getId());
-        return loans.stream().map(loan -> {
-            LoanDTO dto = this.mapperUtil.getModelMapper().map(loan, LoanDTO.class);
-            paymentPlanRepository.findByLoanId(loan.getId()).stream()
-                    .filter(pp -> pp.getDate() != null && !pp.getDate().isBefore(LocalDate.now()))
-                    .min(Comparator.comparing(PaymentPlan::getDate))
-                    .ifPresent(pp -> {
-                        dto.setCurrentPayment(pp.getContributionAmount());
-                        dto.setNextPaymentDate(pp.getDate());
-                    });
-            return dto;
-        }).collect(Collectors.toList());
+
+        return loans.stream()
+                .map(loan -> {
+                    LoanDTO dto = this.mapperUtil.getModelMapper().map(loan, LoanDTO.class);
+
+                    paymentPlanRepository.findByLoanId(loan.getId())
+                            .stream()
+                            .filter(pp -> !pp.isPaid())
+                            .filter(pp -> pp.getDate() != null)
+                            .min(Comparator.comparing(PaymentPlan::getDate))
+                            .ifPresentOrElse(
+                                    pp -> {
+                                        dto.setCurrentPayment(pp.getContributionAmount());
+                                        dto.setNextPaymentDate(pp.getDate());
+                                    },
+                                    () -> {
+                                        dto.setCurrentPayment(null);
+                                        dto.setNextPaymentDate(null);
+                                    }
+                            );
+
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
+
+    private LoanDTO mapLoanWithNextPayment(Loan loan) {
+        LoanDTO dto = this.mapperUtil.getModelMapper().map(loan, LoanDTO.class);
+
+        paymentPlanRepository.findByLoanId(loan.getId())
+                .stream()
+                .filter(pp -> !pp.isPaid())
+                .filter(pp -> pp.getDate() != null)
+                .min(Comparator.comparing(PaymentPlan::getDate))
+                .ifPresentOrElse(
+                        pp -> {
+                            dto.setCurrentPayment(pp.getContributionAmount());
+                            dto.setNextPaymentDate(pp.getDate());
+                        },
+                        () -> {
+                            dto.setCurrentPayment(null);
+                            dto.setNextPaymentDate(null);
+                        }
+                );
+
+        return dto;
+    }
+
+    private Customer getCustomerForUser(String username) {
+        User user = userRepository.findByEmail(username)
+                .orElseThrow(() -> new RuntimeException("User not found: " + username));
+
+        if (user.getCustomer() == null) {
+            throw new RuntimeException("User is not linked to a customer");
+        }
+
+        return user.getCustomer();
+    }
+
+    @Override
+    @Transactional
+    public LoanDTO payNextInstallment(long loanId, long bankAccountId, String username) {
+        Customer customer = getCustomerForUser(username);
+
+        Loan loan = loanRepository.findById(loanId)
+                .orElseThrow(() -> new RuntimeException("Loan with id " + loanId + " not found"));
+
+        if (loan.getCustomer() == null || loan.getCustomer().getId() != customer.getId()) {
+            throw new RuntimeException("Loan does not belong to the current user");
+        }
+
+        BankAccount bankAccount = bankAccountRepository.findById(bankAccountId)
+                .orElseThrow(() -> new RuntimeException("Bank account with id " + bankAccountId + " not found"));
+
+        if (bankAccount.getCustomer() == null || bankAccount.getCustomer().getId() != customer.getId()) {
+            throw new RuntimeException("Bank account does not belong to the current user");
+        }
+
+        if (!bankAccount.isStatus()) {
+            throw new RuntimeException("Bank account is not active");
+        }
+
+        PaymentPlan nextInstallment = paymentPlanRepository.findByLoanId(loanId)
+                .stream()
+                .filter(pp -> !pp.isPaid())
+                .filter(pp -> pp.getDate() != null)
+                .min(Comparator.comparing(PaymentPlan::getDate))
+                .orElseThrow(() -> new RuntimeException("Loan is already fully paid"));
+
+        BigDecimal paymentAmount = nextInstallment.getContributionAmount();
+
+        if (bankAccount.getBalance().compareTo(paymentAmount) < 0) {
+            throw new RuntimeException("Insufficient funds");
+        }
+
+        bankAccount.setBalance(
+                bankAccount.getBalance().subtract(paymentAmount)
+        );
+
+        nextInstallment.setPaid(true);
+        nextInstallment.setPaidDate(LocalDate.now());
+
+        bankAccountRepository.save(bankAccount);
+        paymentPlanRepository.save(nextInstallment);
+
+        return mapLoanWithNextPayment(loan);
     }
 }
