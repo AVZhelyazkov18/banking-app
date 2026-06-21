@@ -177,7 +177,9 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
         Loan loan = loanRepository.findById(loanId)
                 .orElseThrow(() -> new RuntimeException("Loan not found"));
 
-        List<PaymentPlan> plans = new ArrayList<>(loan.getPaymentPlans());
+        List<PaymentPlan> plans = loan.getPaymentPlans() == null
+                ? new ArrayList<>()
+                : new ArrayList<>(loan.getPaymentPlans());
 
         if (plans.isEmpty()) {
             BigDecimal loanAmount = loan.getAmountDisbursed();

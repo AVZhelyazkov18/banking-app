@@ -23,8 +23,10 @@ import bg.nbu.banking_app.data.repository.CustomerRepository;
 import bg.nbu.banking_app.data.repository.LoanTypeRepository;
 
 import bg.nbu.banking_app.data.entity.BankAccount;
-import bg.nbu.banking_app.data.entity.Customer;
 import bg.nbu.banking_app.data.repository.BankAccountRepository;
+import org.springframework.transaction.annotation.Transactional;
+
+import bg.nbu.banking_app.service.PaymentPlanService;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -39,6 +41,7 @@ public class LoanServiceImpl implements LoanService {
     private final LoanTypeRepository loanTypeRepository;
     private final MapperUtil mapperUtil;
     private final BankAccountRepository bankAccountRepository;
+    private final PaymentPlanService paymentPlanService;
 
     @Override
     public List<LoanDTO> getLoans() {
@@ -81,6 +84,9 @@ public class LoanServiceImpl implements LoanService {
 
         LoanDTO result = mapperUtil.getModelMapper().map(saved, LoanDTO.class);
         result.setCustomerId(customer.getId());
+
+        // Payment plan gets automatically created with the loan otherwise it shows as if it is already paid without the plan.
+        paymentPlanService.getPaymentPlanFromLoan(saved.getId());
 
         return result;
     }
@@ -162,9 +168,14 @@ public class LoanServiceImpl implements LoanService {
 
     private LoanDTO mapLoanWithNextPayment(Loan loan) {
         LoanDTO dto = this.mapperUtil.getModelMapper().map(loan, LoanDTO.class);
+        List<PaymentPlan> paymentPlans = paymentPlanRepository.findByLoanId(loan.getId());
 
-        paymentPlanRepository.findByLoanId(loan.getId())
-                .stream()
+        if (paymentPlans.isEmpty()) {
+            paymentPlanService.getPaymentPlanFromLoan(loan.getId());
+            paymentPlans = paymentPlanRepository.findByLoanId(loan.getId());
+        }
+
+        paymentPlans.stream()
                 .filter(pp -> !pp.isPaid())
                 .filter(pp -> pp.getDate() != null)
                 .min(Comparator.comparing(PaymentPlan::getDate))
