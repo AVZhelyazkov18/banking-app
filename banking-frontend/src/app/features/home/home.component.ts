@@ -20,10 +20,15 @@ export class HomeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.loadHomeData();
+  }
+
+  loadHomeData(): void {
     this.bankAccountsService.getMyBankAccounts().subscribe({
       next: data => this.bankAccounts = data,
       error: err => this.errorMessage = err.error?.message || 'Failed to load bank accounts'
     });
+
     this.loansService.getMyLoans().subscribe({
       next: data => this.loans = data,
       error: err => this.errorMessage = err.error?.message || 'Failed to load loans'
@@ -35,10 +40,34 @@ export class HomeComponent implements OnInit {
   }
 
   prev(): void {
-    if (this.currentAccountIndex > 0) this.currentAccountIndex--;
+    if (this.currentAccountIndex > 0) {
+      this.currentAccountIndex--;
+    }
   }
 
   next(): void {
-    if (this.currentAccountIndex < this.bankAccounts.length - 1) this.currentAccountIndex++;
+    if (this.currentAccountIndex < this.bankAccounts.length - 1) {
+      this.currentAccountIndex++;
+    }
+  }
+
+  payLoan(loan: LoanDTO): void {
+    if (!this.currentAccount || !this.currentAccount.id) {
+      this.errorMessage = 'Please select a bank account first';
+      return;
+    }
+
+    if (!this.currentAccount.status) {
+      this.errorMessage = 'Selected bank account is not active';
+      return;
+    }
+
+    this.loansService.payNextInstallment(loan.id, this.currentAccount.id).subscribe({
+      next: () => {
+        this.errorMessage = '';
+        this.loadHomeData();
+      },
+      error: err => this.errorMessage = err.error?.message || 'Payment failed'
+    });
   }
 }

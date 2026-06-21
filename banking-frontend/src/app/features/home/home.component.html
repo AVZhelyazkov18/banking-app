@@ -62,7 +62,10 @@
           <div class="text-muted small">{{ loan.nextPaymentDate }}</div>
           <div class="fw-semibold" style="color:#1a3a6b;">{{ loan.currentPayment | number:'1.2-2' }} EUR</div>
         </div>
-        <button class="btn btn-accent btn-sm px-4">
+        <button
+          class="btn btn-accent btn-sm px-4"
+          (click)="payLoan(loan)"
+          [disabled]="!currentAccount || !currentAccount.status">
           <i class="bi bi-lightning-charge me-1"></i>Pay Now
         </button>
       </ng-container>

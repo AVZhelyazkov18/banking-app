@@ -32,4 +32,10 @@ export class LoansService {
   getMyLoans(): Observable<LoanDTO[]> {
     return this.http.get<LoanDTO[]>(`${this.apiUrl}/my`);
   }
+
+  payNextInstallment(loanId: number, bankAccountId: number): Observable<LoanDTO> {
+    return this.http.post<LoanDTO>(`${this.apiUrl}/${loanId}/pay`, {
+      bankAccountId
+    });
+  }
 }

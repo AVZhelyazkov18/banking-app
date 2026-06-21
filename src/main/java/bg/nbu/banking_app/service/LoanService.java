@@ -11,4 +11,5 @@ public interface LoanService {
     LoanDTO updateLoan(LoanDTO loan, long id);
     void deleteLoan(long id);
     List<LoanDTO> getMyLoans(String username);
+    LoanDTO payNextInstallment(long loanId, long bankAccountId, String username);
 }

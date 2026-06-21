@@ -1,6 +1,7 @@
 package bg.nbu.banking_app.controller;
 
 import bg.nbu.banking_app.data.dto.Loans.ClientLoans.LoanDTO;
+import bg.nbu.banking_app.data.dto.Loans.ClientLoans.LoanPaymentRequest;
 import bg.nbu.banking_app.service.LoanService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -49,5 +50,18 @@ public class LoanController {
     @PreAuthorize("hasRole('ADMIN')")
     public void deleteLoan(@PathVariable long id) {
         this.loanService.deleteLoan(id);
+    }
+
+    @PostMapping("/{id}/pay")
+    public LoanDTO payNextInstallment(
+            @PathVariable long id,
+            @Valid @RequestBody LoanPaymentRequest request,
+            Authentication authentication
+    ) {
+        return loanService.payNextInstallment(
+                id,
+                request.getBankAccountId(),
+                authentication.getName()
+        );
     }
 }
