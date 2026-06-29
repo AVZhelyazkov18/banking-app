@@ -15,13 +15,6 @@ public interface PaymentPlanService {
 
     List<PaymentPlanDTO> getPaymentPlanFromLoan(long loanId);
 
-    List<PaymentPlanDTO> generateAnnuityPaymentPlan(
-            BigDecimal amountDisbursed,
-            double annualInterestRatePercent,
-            int paymentTermMonths,
-            LocalDate firstPaymentDate
-    );
-
     PaymentPlanDTO markInstallmentAsPaid(long id);
     PaymentPlanDTO markInstallmentAsPaid(long id, LocalDate paidDate);
 }
